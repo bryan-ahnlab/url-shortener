@@ -1,0 +1,25 @@
+{
+  "name": "Python & Poetry & TypeScript & NextJS & MySQL",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "ms-python.black-formatter",
+        "naumovs.color-highlight",
+        "heybourn.headwind",
+        "ecmel.vscode-html-css",
+        "oderwat.indent-rainbow",
+        "hb432.prettier-eslint-typescript",
+        "bradlc.vscode-tailwindcss",
+        "planbcoding.vscode-react-refactor"
+      ]
+    }
+  }
+}

@@ -1,0 +1,12 @@
+language: "typescript"
+type: "application"
+
+tasks:
+  install:
+    command: "npm install"
+  run:
+    command: "npm run dev"
+  build:
+    command: "npm run build"
+  start:
+    command: "npm run start"

@@ -1,0 +1,13 @@
+language: "python"
+type: "application"
+
+tasks:
+  install:
+    command: "poetry install"
+  update:
+    command: "poetry lock --no-update"
+  run:
+    command: "poetry run python app/service.py --port 3001 --env development"
+  start:
+    command: "poetry run python app/service.py --port 3001 --env production"
+
