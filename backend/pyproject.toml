@@ -6,7 +6,7 @@ authors = ["bryan-ahnlab <bryan@ahnlab.io>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.10,<4.0"
 fastapi = "^0.79.0"
 uvicorn = "^0.18.2"
 toml = "^0.10.2"
@@ -15,6 +15,7 @@ uuid = "^1.30"
 sqlalchemy = "^2.0.29"
 psycopg2-binary = "^2.9.9"
 pymysql = "^1.1.0"
+cryptography = "^45.0.3"
 
 [build-system]
 requires = ["poetry-core"]

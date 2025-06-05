@@ -1,3 +1,6 @@
 {
-  "python.analysis.extraPaths": ["./backend/app"]
+  "python.analysis.extraPaths": [
+    "./backend/app",
+    "./backend/.venv/lib/python3.10/site-packages"
+  ]
 }

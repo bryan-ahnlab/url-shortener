@@ -4,4 +4,4 @@
 .moon/docker
 
 # env files
-.env*
+#.env*
