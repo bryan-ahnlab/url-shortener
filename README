@@ -1,0 +1,13 @@
+---
+
+moon run backend:install
+
+moon run backend:run
+
+---
+
+moon run frontend:install
+
+moon run frontend:run
+
+---
