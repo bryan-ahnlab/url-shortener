@@ -7,39 +7,41 @@ from crud import crud
 
 service_router = APIRouter()
 
-@service_router.post("/url", response_class=JSONResponse)
-async def create_url(request: service.CreateURL):
 
-    item = crud.create_url(request)
+@service_router.post("/url", response_class=JSONResponse)
+async def create_url(request: service.ShortenURLRequest):
+
+    data = crud.create_url(request)
 
     response = {
-        "status_code": status.HTTP_200_OK,
-        "message": "created",
-        "data": {
-            "request": request,
-            "item": item,    
-        }        
+        "status": status.HTTP_200_OK,
+        "message": "create",
+        "request": request,
+        "data": data,
     }
-    return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(response))
+    return JSONResponse(
+        status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
+    )
+
 
 @service_router.get("/{short_url}")
 async def read_url(short_url: str):
-    request = service.ReadURL(short_url=short_url)
+    request = service.RedirectURL(short_url=short_url)
 
-    item = crud.read_url(request)
-    if item is None:
-        response = {
-            "status_code": status.HTTP_200_OK,
-            "message": "not found",
-            "data": {
-                "request": request,
-                "item": item,    
-            }        
-        }
-        return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(response))
+    data = crud.read_url(request)
 
-    long_url = item.long_url    
-    if not (long_url.startswith("http://") or long_url.startswith("https://")):
-        long_url = "http://" + long_url
+    if data is not None:
+        long_url = data.long_url
 
-    return RedirectResponse(url=long_url, status_code=302)
+        return RedirectResponse(url=long_url, status_code=302)
+
+    response = {
+        "status": status.HTTP_404_NOT_FOUND,
+        "message": "not found",
+        "request": request,
+        "data": data,
+    }
+
+    return JSONResponse(
+        status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
+    )

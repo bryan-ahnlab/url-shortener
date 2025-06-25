@@ -1,13 +1,23 @@
-from sqlalchemy import CHAR, Column, String, DateTime, func
-from sqlalchemy.dialects.mysql import LONGTEXT
+from typing import Optional
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, DateTime, func
 from db.database import Base
 import uuid
+import datetime
 
-class URL(Base):
-    __tablename__ = "URLS"
-    
-    id = Column(CHAR(32), primary_key=True, default=lambda: uuid.uuid4().hex, unique=True, nullable=False)
-    long_url = Column(String(255), index=True)
-    short_url = Column(String(255), unique=True, index=True)
-    description = Column(String(255), nullable=True)
-    created_at = Column(DateTime, server_default=func.now())
+
+class ShortenedURL(Base):
+    __tablename__ = "shortened_urls"
+
+    id: Mapped[str] = mapped_column(
+        String(32),
+        primary_key=True,
+        default=lambda: uuid.uuid4().hex,
+        unique=True,
+    )
+    long_url: Mapped[str] = mapped_column(String(2048))
+    short_url: Mapped[str] = mapped_column(String(16), unique=True, index=True)
+    description: Mapped[Optional[str]] = mapped_column(String(255))
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime, server_default=func.now()
+    )
