@@ -19,8 +19,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=["http://localhost:3000"], # Next.js Server Component 요청으로 인해 무의미
+    allow_credentials=True, # 공식 명세 (WHATWG Fetch: https://fetch.spec.whatwg.org/#http-access-control-allow-origin)
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -42,7 +42,7 @@ if __name__ == "__main__":
         reload = True
     elif settings.ENVIRONMENT == 'production':
         workers = 4
-        reload = False
+        reload = True
     else:
         workers = 1
         reload = True
@@ -51,7 +51,7 @@ if __name__ == "__main__":
         app="service:app",
         host="0.0.0.0",
         port=settings.PORT,
-        access_log=False,
+        access_log=True,
         workers=workers,
         reload=reload
     )
