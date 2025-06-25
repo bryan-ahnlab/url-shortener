@@ -3,6 +3,10 @@
 export async function shortenUrl(formData: FormData) {
   const formObject = Object.fromEntries(formData.entries());
 
+  console.log(formData.entries());
+
+  console.log(`formObject`, formObject);
+
   try {
     const response = await fetch(`${process.env.BASE_URL}/api/url`, {
       method: "POST",
