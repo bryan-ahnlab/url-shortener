@@ -12,13 +12,17 @@ export default function ShortenUrlForm() {
 
     const formData = new FormData(event.currentTarget);
     const result = await shortenUrl(formData);
+    console.log(`result`, result);
+    console.log(`result`, result.ok);
 
-    if (result.ok) {
-      setShortUrl(result.shortUrl || "");
-      setError("");
+    if (result.status === 200) {
+      setShortUrl(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/${result.data.short_url}`
+      );
+      setError(null);
     } else {
-      setError(result.error);
-      setShortUrl("");
+      setError(result.detail || "An error occurred");
+      setShortUrl(null);
     }
   };
 

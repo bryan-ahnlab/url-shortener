@@ -3,16 +3,16 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class ShortenURLRequest(BaseModel):
+class ShortenUrlRequest(BaseModel):
     long_url: str
     description: Optional[str] = None
 
 
-class ShortenURLResponse(ShortenURLRequest):
+class ShortenUrlResponse(ShortenUrlRequest):
     id: str
     short_url: str
     created_at: datetime.datetime
 
 
-class RedirectURL(BaseModel):
+class RedirectUrl(BaseModel):
     short_url: str

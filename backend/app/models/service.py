@@ -6,7 +6,7 @@ import uuid
 import datetime
 
 
-class ShortenedURL(Base):
+class ShortenedUrl(Base):
     __tablename__ = "shortened_urls"
 
     id: Mapped[str] = mapped_column(
