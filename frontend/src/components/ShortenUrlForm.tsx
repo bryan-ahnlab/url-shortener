@@ -11,17 +11,16 @@ export default function ShortenUrlForm() {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const result = await shortenUrl(formData);
-    console.log(`result`, result);
-    console.log(`result`, result.ok);
+    const response = await shortenUrl(formData);
+    console.log(`response`, response);
 
-    if (result.status === 200) {
+    if (response.status === 200) {
       setShortUrl(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/${result.data.short_url}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/${response.data.short_url}`
       );
       setError(null);
     } else {
-      setError(result.detail || "An error occurred");
+      setError(response.detail || "An error occurred");
       setShortUrl(null);
     }
   };
@@ -32,12 +31,12 @@ export default function ShortenUrlForm() {
       className="flex flex-col gap-4 p-6 border border-white/10 rounded-xl shadow-xl backdrop-blur-lg bg-white/5 w-full max-w-md"
     >
       <h2 className="text-lg font-semibold text-white text-center">
-        Enter URL to Shorten
+        Enter URL
       </h2>
 
       <div className="flex flex-col gap-2.5">
         <label className="text-sm text-white" htmlFor="long_url">
-          Original URL:
+          Long URL:
         </label>
         <input
           className="bg-black/20 border border-white/20 rounded px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-sm"
@@ -53,12 +52,12 @@ export default function ShortenUrlForm() {
         type="submit"
         className="bg-yellow-400 text-black font-bold py-2 px-4 rounded hover:scale-105 transition-transform duration-300 hover:bg-yellow-300 text-sm shadow-md"
       >
-        Shorten URL
+        Shorten
       </button>
 
       {shortUrl && (
         <div className="mt-5 p-4 border border-white/10 rounded-xl backdrop-blur-md bg-white/5 text-sm text-white">
-          <p className="mb-1">Shortened URL:</p>
+          <p className="mb-1">Short URL:</p>
           <a
             href={shortUrl}
             className="text-blue-400 hover:underline break-words"
