@@ -12,7 +12,6 @@ export default function ShortenUrlForm() {
 
     const formData = new FormData(event.currentTarget);
     const response = await shortenUrl(formData);
-    console.log(`response`, response);
 
     if (response.status === 200) {
       setShortUrl(
