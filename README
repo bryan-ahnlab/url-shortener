@@ -1,13 +1,136 @@
----
+✅ 프로젝트 개발환경 및 구조 설명
+본 프로젝트는 Moonrepo 기반 Monorepo 구조와 DevContainer (Docker) 를 활용하여 다음과 같은 통합 개발환경을 제공합니다.
+모든 DevContainer 관련 파일은 .devcontainer/ 디렉토리 내에 위치합니다.
 
-moon run backend:install
-
-moon run backend:run
-
----
-
-moon run frontend:install
-
+📦 프로젝트 구조
+```
+├── .devcontainer/            # DevContainer 관련 설정 전체
+│   ├── Dockerfile            # 개발용 컨테이너 커스텀 이미지 정의
+│   ├── docker-compose.yml    # 전체 서비스 구성 (App, MySQL)
+│   └── devcontainer.json     # VSCode DevContainer 설정
+│
+├── .moon/                    # Moonrepo
+│   └── workspace.yml         # Moonrepo Monorepo 설정
+│
+├── frontend/                 # 프론트엔드 (Next.js)
+├── backend/                  # 백엔드 (FastAPI 또는 Python)
+└── ...                       # 기타 공통 설정 및 파일
+```
+🛠️ 개발환경 핵심 구성
+1. Monorepo 관리 - Moonrepo
+workspace.yml로 frontend, backend를 독립적 프로젝트로 관리
+빌드/테스트/실행을 각 프로젝트 단위로 수행
+예시 명령어:
+```
 moon run frontend:run
+moon run backend:run
+```
+2. DevContainer 기반 통합 개발환경
+VSCode DevContainer로 격리된 개발환경 제공
+실제 개발은 Docker 컨테이너 내에서 진행
+로컬 환경을 오염시키지 않음
+구성 요소:
+```
+구성 요소	버전/설명
+Python	3.10 (pyenv 기반 설치)
+Poetry	Python 의존성 관리
+Node.js	18.x
+npm 글로벌 경로	~/.npm-global로 별도 관리
+Moonrepo CLI	프로젝트 빌드/실행 최적화 도구
+MySQL	8.0 (별도 컨테이너로 구동)
+```
+VSCode 자동설치 확장:
 
----
+Python, Pylance, DebugPy, Black Formatter
+
+ESLint, Prettier, Headwind
+
+Tailwind CSS, React Refactor
+
+HTML/CSS, Indent Rainbow 등
+
+3. DevContainer 내부 서비스 구성
+.devcontainer/docker-compose.yml
+```
+version: "1.0"
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: database
+      MYSQL_USER: bryan
+      MYSQL_PASSWORD: password
+```
+app: 개발용 컨테이너
+Python, Node.js, Moonrepo, 프론트/백 모두 포함
+/workspaces에 프로젝트 전체 마운트
+sleep infinity로 컨테이너 종료 방지
+mysql: 별도 DB 컨테이너 (로컬 포트 3306 연결)
+4. Dockerfile 상세
+.devcontainer/Dockerfile
+- 베이스 이미지: mcr.microsoft.com/devcontainers/base:jammy
+- 개발 필수 패키지 설치
+- pyenv로 Python 3.10 설치
+- Poetry 설치 및 프로젝트 내 가상환경 구성
+- Moonrepo CLI 설치
+- Node.js 18 설치
+- frontend로 이동해 npm install
+- 전역으로 create-react-app, next 설치
+- .npm-global을 npm 전역 경로로 지정
+컨테이너 내에서 /home/$USER/app 하위에 프로젝트 전체가 위치
+5. VSCode DevContainer 설정
+.devcontainer/devcontainer.json
+```
+{
+  "name": "Python & Poetry & TypeScript & NextJS & MySQL",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "ms-python.black-formatter",
+        "naumovs.color-highlight",
+        "heybourn.headwind",
+        "ecmel.vscode-html-css",
+        "oderwat.indent-rainbow",
+        "hb432.prettier-eslint-typescript",
+        "bradlc.vscode-tailwindcss",
+        "planbcoding.vscode-react-refactor"
+      ]
+    }
+  }
+}
+```
+⚙️ 개발 시 주의사항
+DevContainer 내에서만 명령어 실행 권장
+Monorepo 기반으로 각 프로젝트 독립 관리
+파일 변경 감지를 위해 CHOKIDAR_USEPOLLING, WATCHPACK_POLLING 사용
+로컬에서 DB 접근 필요시 포트 3306 사용
+
+✅ 요약
+Python(백엔드) + Node.js(프론트) + MySQL 통합 개발환경을
+Moonrepo로 프로젝트 관리, DevContainer로 격리된 개발환경 제공,
+Docker Compose로 전체 서비스 일괄 관리하는 구조입니다.
+
+모든 DevContainer 관련 설정은 .devcontainer/ 디렉토리에 통합되어 관리됩니다.
