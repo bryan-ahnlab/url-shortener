@@ -6,7 +6,6 @@ from core.setting import settings
 
 from db.database import Base, createDatabaseEngine, dropDatabaseEngine
 
-from routes.user import user_router
 from routes.url import url_router
 
 app = FastAPI(
@@ -27,7 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.include_router(user_router)
 app.include_router(url_router)
 
 

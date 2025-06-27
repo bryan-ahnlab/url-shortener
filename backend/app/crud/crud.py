@@ -1,21 +1,18 @@
 from utils.base62 import shorten_uuid
 from db.database import SessionLocal
 
-from models.service import ShortenedUrl
-from schemas.service import ShortenUrlRequest, RedirectUrl
+from models.url import Url
+from schemas.url import ShortenUrlRequest, RedirectUrl
 
 
 def create_url(request: ShortenUrlRequest):
     db = SessionLocal()
     try:
         short_url = shorten_uuid()
-        while (
-            db.query(ShortenedUrl).filter(ShortenedUrl.short_url == short_url).first()
-            is not None
-        ):
+        while db.query(Url).filter(Url.short_url == short_url).first() is not None:
             short_url = shorten_uuid()
 
-        data = ShortenedUrl(
+        data = Url(
             long_url=request.long_url,
             description=request.description,
             short_url=short_url,
@@ -35,11 +32,7 @@ def create_url(request: ShortenUrlRequest):
 def read_url(request: RedirectUrl):
     db = SessionLocal()
     try:
-        data = (
-            db.query(ShortenedUrl)
-            .filter(ShortenedUrl.short_url == request.short_url)
-            .first()
-        )
+        data = db.query(Url).filter(Url.short_url == request.short_url).first()
 
         return data
     except Exception as error:

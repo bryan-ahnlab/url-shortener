@@ -2,16 +2,16 @@ from fastapi import APIRouter, Depends, Request, status
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.encoders import jsonable_encoder
 
-from schemas import url
+from schemas import url as url_schema
 from crud import crud
 
 url_router = APIRouter()
 
 
 @url_router.post(
-    "/url", response_class=JSONResponse, response_model=url.ShortenUrlResponse
+    "/url", response_class=JSONResponse, response_model=url_schema.ShortenUrlResponse
 )
-async def create_url(request: Request, payload: url.ShortenUrlRequest):
+async def create_url(request: Request, payload: url_schema.ShortenUrlRequest):
     try:
         data = crud.create_url(payload)
 
@@ -42,7 +42,7 @@ async def create_url(request: Request, payload: url.ShortenUrlRequest):
 
 
 @url_router.get("/{short_url}")
-async def read_url(request: Request, payload: url.RedirectUrl = Depends()):
+async def read_url(request: Request, payload: url_schema.RedirectUrl = Depends()):
     try:
         data = crud.read_url(payload)
 
