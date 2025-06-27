@@ -1,8 +1,8 @@
 from utils.base62 import shorten_uuid
 from db.database import SessionLocal
 
-from models.url import Url
-from schemas.url import ShortenUrlRequest, RedirectUrl
+from models.url_model import Url
+from schemas.url_schema import ShortenUrlRequest, RedirectUrl
 
 
 def create_url(request: ShortenUrlRequest):

@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, Request, status
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.encoders import jsonable_encoder
 
-from schemas import url as url_schema
-from crud import crud
+from schemas import url_schema
+from crud import url_crud
 
 url_router = APIRouter()
 
@@ -13,7 +13,7 @@ url_router = APIRouter()
 )
 async def create_url(request: Request, payload: url_schema.ShortenUrlRequest):
     try:
-        data = crud.create_url(payload)
+        data = url_crud.create_url(payload)
 
     except Exception as error:
         base_url = str(request.base_url).rstrip("/")
@@ -44,7 +44,7 @@ async def create_url(request: Request, payload: url_schema.ShortenUrlRequest):
 @url_router.get("/{short_url}")
 async def read_url(request: Request, payload: url_schema.RedirectUrl = Depends()):
     try:
-        data = crud.read_url(payload)
+        data = url_crud.read_url(payload)
 
         if data is not None:
             long_url = data.long_url

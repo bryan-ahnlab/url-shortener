@@ -6,7 +6,7 @@ from core.setting import settings
 
 from db.database import Base, createDatabaseEngine, dropDatabaseEngine
 
-from routes.url import url_router
+from routes.url_route import url_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
