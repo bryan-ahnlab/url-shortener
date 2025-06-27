@@ -62,3 +62,21 @@ def update_user(email: str, payload):
         raise error
     finally:
         db.close()
+
+
+def delete_user(email: str):
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.email == email).first()
+
+        if not user:
+            return False
+
+        db.delete(user)
+        db.commit()
+        return True
+    except Exception as error:
+        db.rollback()
+        raise error
+    finally:
+        db.close()

@@ -159,3 +159,45 @@ async def update(request: Request, email: str, payload: user_schema.UpdateReques
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
         )
+
+
+@user_router.delete("/delete/{email}", response_class=JSONResponse)
+async def delete(request: Request, email: str):
+    try:
+        success = user_crud.delete_user(email)
+
+        if not success:
+            base_url = str(request.base_url).rstrip("/")
+            instance = str(request.url)
+
+            error_response = {
+                "type": f"{base_url}/docs#/default/delete_delete_delete",
+                "title": "Not Found",
+                "status": status.HTTP_404_NOT_FOUND,
+                "detail": "User not found.",
+                "instance": instance,
+            }
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND, content=error_response
+            )
+
+        response = {
+            "status": status.HTTP_200_OK,
+            "message": "delete",
+        }
+        return JSONResponse(status_code=status.HTTP_200_OK, content=response)
+
+    except Exception as error:
+        base_url = str(request.base_url).rstrip("/")
+        instance = str(request.url)
+
+        error_response = {
+            "type": f"{base_url}/docs#/default/delete_delete_delete",
+            "title": "Internal Server Error",
+            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "detail": str(error),
+            "instance": instance,
+        }
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
+        )
