@@ -23,6 +23,7 @@ async def signup(request: Request, payload: user_schema.SignUpRequest):
                 "status": status.HTTP_409_CONFLICT,
                 "detail": "User already exists.",
                 "instance": instance,
+                "method": "POST",
             }
             return JSONResponse(
                 status_code=status.HTTP_409_CONFLICT, content=error_response
@@ -54,6 +55,7 @@ async def signup(request: Request, payload: user_schema.SignUpRequest):
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
             "instance": instance,
+            "method": "POST",
         }
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
@@ -77,6 +79,7 @@ async def login(request: Request, payload: user_schema.LoginRequest):
                 "status": status.HTTP_401_UNAUTHORIZED,
                 "detail": "Invalid email or password.",
                 "instance": instance,
+                "method": "POST",
             }
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED, content=error_response
@@ -101,6 +104,7 @@ async def login(request: Request, payload: user_schema.LoginRequest):
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
             "instance": instance,
+            "method": "POST",
         }
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
@@ -126,6 +130,7 @@ async def update(request: Request, email: str, payload: user_schema.UpdateReques
                 "status": status.HTTP_404_NOT_FOUND,
                 "detail": "User not found.",
                 "instance": instance,
+                "method": "PUT",
             }
             return JSONResponse(
                 status_code=status.HTTP_404_NOT_FOUND, content=error_response
@@ -155,6 +160,7 @@ async def update(request: Request, email: str, payload: user_schema.UpdateReques
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
             "instance": instance,
+            "method": "PUT",
         }
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
@@ -176,6 +182,7 @@ async def delete(request: Request, email: str):
                 "status": status.HTTP_404_NOT_FOUND,
                 "detail": "User not found.",
                 "instance": instance,
+                "method": "DELETE",
             }
             return JSONResponse(
                 status_code=status.HTTP_404_NOT_FOUND, content=error_response
@@ -197,6 +204,7 @@ async def delete(request: Request, email: str):
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
             "instance": instance,
+            "method": "DELETE",
         }
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response

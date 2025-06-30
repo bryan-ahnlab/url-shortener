@@ -13,6 +13,9 @@ url_router = APIRouter()
 )
 async def create_url(request: Request, payload: url_schema.ShortenUrlRequest):
     try:
+        # 테스트용 강제 에러
+        # raise Exception("Test error")
+
         data = url_crud.create_url(payload)
 
     except Exception as error:
@@ -25,6 +28,7 @@ async def create_url(request: Request, payload: url_schema.ShortenUrlRequest):
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
             "instance": instance,
+            "method": "POST",
         }
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
@@ -63,6 +67,7 @@ async def read_url(request: Request, payload: url_schema.RedirectUrl = Depends()
             "status": status.HTTP_404_NOT_FOUND,
             "detail": f"Short URL '{payload.short_url}' does not exist.",
             "instance": instance,
+            "method": "GET",
         }
         return JSONResponse(
             status_code=status.HTTP_404_NOT_FOUND, content=error_response
@@ -78,6 +83,7 @@ async def read_url(request: Request, payload: url_schema.RedirectUrl = Depends()
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
             "instance": instance,
+            "method": "GET",
         }
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
