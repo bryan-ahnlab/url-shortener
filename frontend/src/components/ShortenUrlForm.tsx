@@ -58,7 +58,7 @@ export default function ShortenUrlForm() {
       </button>
 
       {data && (
-        <div className="mt-5 p-4 border border-white/10 rounded-xl bg-white/5 text-white text-sm space-y-1">
+        <div className="mt-5 p-4 border border-white/10 rounded-xl bg-white/5 text-white text-sm space-y-1 break-all">
           <p>
             <strong>ID:&nbsp;</strong>
             {data.response.id}
@@ -93,7 +93,7 @@ export default function ShortenUrlForm() {
       )}
 
       {error && (
-        <div className="mt-5 p-4 border border-red-500 rounded-xl bg-red-500/10 text-red-400 text-sm space-y-1">
+        <div className="mt-5 p-4 border border-red-500 rounded-xl bg-red-500/10 text-red-400 text-sm space-y-1 break-all">
           <p>
             <strong>Title:&nbsp;</strong>
             {error.title}
