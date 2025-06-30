@@ -2,54 +2,57 @@
 
 import { ApiError, DEFAULT_API_ERROR } from "@/types/error";
 import { safeParseJson } from "@/utils/utility";
+import { ApiResult, ShortenUrlData } from "@/types/response";
 
-export async function shortenUrl(formData: FormData) {
+export async function shortenUrl(
+  formData: FormData
+): Promise<ApiResult<ShortenUrlData>> {
   const formObject = Object.fromEntries(formData.entries());
 
   try {
-    const response = await fetch(`${process.env.BASE_URL}/api/url`, {
+    const apiResponse = await fetch(`${process.env.BASE_URL}/api/url`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formObject),
     });
 
-    const contentType = response.headers.get("content-type");
+    const contentType = apiResponse.headers.get("content-type");
+    const responseData = contentType?.includes("application/json")
+      ? await safeParseJson(apiResponse)
+      : {
+          detail: (await apiResponse.text()) || "Unexpected non-JSON response",
+        };
 
-    let data = null;
-
-    if (contentType?.includes("application/json")) {
-      data = await safeParseJson(response);
-    } else {
-      const text = await response.text();
-      data = { detail: text || "Unexpected non-JSON response" };
-    }
-
-    if (!response.ok) {
-      const error = new ApiError({
-        type: data?.type || "",
-        title: data?.title || "Error",
-        status: response.status,
-        detail: data?.detail || "Unexpected error",
-        instance: data?.instance || "",
-        method: data?.method || "",
-      });
-
+    if (!apiResponse.ok) {
       return {
         ok: false,
-        error: error.toJSON(),
+        error: new ApiError({
+          type: responseData?.type || "",
+          title: responseData?.title || "Error",
+          status: apiResponse.status,
+          detail: responseData?.detail || "Unexpected error",
+          instance: responseData?.instance || "",
+          method: responseData?.method || "POST",
+        }),
       };
     }
 
+    const mappedData = {
+      status: responseData.status,
+      message: responseData.message,
+      request: responseData.request,
+      response: responseData.data,
+    };
+
     return {
       ok: true,
-      data,
+      data: mappedData,
     };
   } catch (error) {
     console.error("Error:", error);
-
     return {
       ok: false,
-      error: DEFAULT_API_ERROR,
+      error: new ApiError(DEFAULT_API_ERROR),
     };
   }
 }

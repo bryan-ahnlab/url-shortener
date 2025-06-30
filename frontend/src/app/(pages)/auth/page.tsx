@@ -4,7 +4,7 @@ import UserLoginForm from "@/components/UserLoginForm";
 
 export default function ShortenPage() {
   return (
-    <div className="mx-auto px-5 py-10 min-w-0">
+    <div className="mx-auto px-5 py-10 min-w-[360px]">
       <UserLoginForm />
     </div>
   );

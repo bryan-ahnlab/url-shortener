@@ -3,29 +3,29 @@
 import { useState } from "react";
 import { shortenUrl } from "@/actions/shorten";
 import { ApiError } from "@/types/error";
+import { ShortenUrlData } from "@/types/response";
+import { normalizeUrl } from "@/utils/utility";
 
 export default function ShortenUrlForm() {
-  const [shortUrl, setShortUrl] = useState<string | null>(null);
+  const [data, setData] = useState<ShortenUrlData | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-    const result = await shortenUrl(formData);
+    const apiResponse = await shortenUrl(formData);
 
-    console.log(`result`, result);
-
-    if (result.ok) {
-      setShortUrl(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/${result.data.data.short_url}`
-      );
+    if (apiResponse.ok) {
+      setData(apiResponse.data);
       setError(null);
     } else {
-      setError(result.error as ApiError);
-      setShortUrl(null);
+      setData(null);
+      setError(apiResponse.error);
     }
   };
+
+  console.log(`data`, data);
 
   return (
     <form
@@ -41,7 +41,7 @@ export default function ShortenUrlForm() {
           Long URL:
         </label>
         <input
-          className="w-full bg-black/20 border border-white/20 rounded px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-sm"
+          className="w-full bg-black/20 border border-white/20 rounded px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white/10"
           type="text"
           name="long_url"
           id="long_url"
@@ -52,38 +52,62 @@ export default function ShortenUrlForm() {
 
       <button
         type="submit"
-        className="bg-yellow-400 text-black font-bold py-2 px-4 rounded hover:scale-105 transition-transform duration-300 hover:bg-yellow-300 text-sm shadow-md"
+        className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200"
       >
         Shorten
       </button>
 
-      {shortUrl && (
-        <div className="mt-5 p-4 border border-white/10 rounded-xl backdrop-blur-md bg-white/5 text-sm text-white">
-          <p className="mb-1">Short URL:</p>
-          <a
-            href={shortUrl}
-            className="text-blue-400 hover:underline break-all"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {shortUrl}
-          </a>
+      {data && (
+        <div className="mt-5 p-4 border border-white/10 rounded-xl bg-white/5 text-white text-sm space-y-1">
+          <p>
+            <strong>ID:&nbsp;</strong>
+            {data.response.id}
+          </p>
+          <p>
+            <strong>Description:&nbsp;</strong>
+            {data.response.description}
+          </p>
+          <p>
+            <strong>Long URL:&nbsp;</strong>
+            <a
+              href={normalizeUrl(data.response.long_url)}
+              className="text-blue-400 hover:underline break-all"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {normalizeUrl(data.response.long_url)}
+            </a>
+          </p>
+          <p>
+            <strong>Short URL:&nbsp;</strong>
+            <a
+              href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${data.response.short_url}`}
+              className="text-blue-400 hover:underline break-all"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {`${process.env.NEXT_PUBLIC_BACKEND_URL}/${data.response.short_url}`}
+            </a>
+          </p>
         </div>
       )}
 
       {error && (
         <div className="mt-5 p-4 border border-red-500 rounded-xl bg-red-500/10 text-red-400 text-sm space-y-1">
           <p>
-            <strong>Title:</strong> {error.title}
+            <strong>Title:&nbsp;</strong>
+            {error.title}
           </p>
           <p>
-            <strong>Detail:</strong> {error.detail}
+            <strong>Detail:&nbsp;</strong>
+            {error.detail}
           </p>
           <p>
-            <strong>Status:</strong> {error.status}
+            <strong>Status:&nbsp;</strong>
+            {error.status}
           </p>
           <p>
-            <strong>Type:</strong>{" "}
+            <strong>Type:&nbsp;</strong>
             <a
               href={error.type}
               target="_blank"
@@ -93,10 +117,11 @@ export default function ShortenUrlForm() {
             </a>
           </p>
           <p>
-            <strong>Method:</strong> {error.method}
+            <strong>Method:&nbsp;</strong>
+            {error.method}
           </p>
           <p>
-            <strong>Instance:</strong>{" "}
+            <strong>Instance:&nbsp;</strong>
             <a
               href={error.instance}
               target="_blank"

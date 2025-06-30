@@ -19,3 +19,11 @@ export function handleResponse(response: Response, data: any) {
   }
   return data;
 }
+
+export function normalizeUrl(url: string): string {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  return `http://${url}`;
+}
