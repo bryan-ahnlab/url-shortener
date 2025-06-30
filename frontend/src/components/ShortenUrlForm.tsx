@@ -99,7 +99,7 @@ export default function ShortenUrlForm() {
           </p>
           <p>
             <strong>Description:&nbsp;</strong>
-            {data.response.description}
+            {data.response.description || "-"}
           </p>
           <p>
             <strong>Long URL:&nbsp;</strong>
