@@ -62,7 +62,7 @@ export default function ShortenUrlForm() {
           <p className="mb-1">Short URL:</p>
           <a
             href={shortUrl}
-            className="text-blue-400 hover:underline break-words"
+            className="text-blue-400 hover:underline break-all"
             target="_blank"
             rel="noopener noreferrer"
           >

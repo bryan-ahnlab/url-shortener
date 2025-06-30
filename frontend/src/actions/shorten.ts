@@ -45,7 +45,7 @@ export async function shortenUrl(formData: FormData) {
       data,
     };
   } catch (error) {
-    console.error("서버 연결 실패 또는 기타 오류:", error);
+    console.error("Error:", error);
 
     return {
       ok: false,
