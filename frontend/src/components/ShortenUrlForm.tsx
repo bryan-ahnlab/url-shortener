@@ -12,6 +12,7 @@ export default function ShortenUrlForm() {
 
   const [inputError, setInputError] = useState<string | null>(null);
   const [longUrl, setLongUrl] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -26,6 +27,7 @@ export default function ShortenUrlForm() {
 
     const formData = new FormData();
     formData.append("long_url", longUrl);
+    formData.append("description", description);
 
     const apiResponse = await shortenUrl(formData);
 
@@ -47,6 +49,7 @@ export default function ShortenUrlForm() {
         Enter URL
       </h2>
 
+      {/* Long URL 입력 */}
       <div className="flex flex-col gap-2.5 w-full">
         <label className="text-sm text-white" htmlFor="long_url">
           Long URL:
@@ -64,6 +67,22 @@ export default function ShortenUrlForm() {
         {inputError && <p className="text-red-400 text-sm">{inputError}</p>}
       </div>
 
+      {/* Description 입력 */}
+      <div className="flex flex-col gap-2.5 w-full">
+        <label className="text-sm text-white" htmlFor="description">
+          Description (Optional):
+        </label>
+        <input
+          className="w-full bg-black/20 border border-white/20 rounded px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white/10"
+          type="text"
+          id="description"
+          placeholder="설명을 입력하세요"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+
+      {/* 제출 버튼 */}
       <button
         type="submit"
         className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200"
@@ -71,6 +90,7 @@ export default function ShortenUrlForm() {
         Shorten
       </button>
 
+      {/* 결과 표시 */}
       {data && (
         <div className="mt-5 p-4 border border-white/10 rounded-xl bg-white/5 text-white text-sm space-y-1 break-all">
           <p>
@@ -106,6 +126,7 @@ export default function ShortenUrlForm() {
         </div>
       )}
 
+      {/* 에러 표시 */}
       {error && (
         <div className="mt-5 p-4 border border-red-500 rounded-xl bg-red-500/10 text-red-400 text-sm space-y-1 break-all">
           <p>
