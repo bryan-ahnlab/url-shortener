@@ -10,9 +10,22 @@ export default function ShortenUrlForm() {
   const [data, setData] = useState<ShortenUrlData | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
 
+  const [inputError, setInputError] = useState<string | null>(null);
+  const [longUrl, setLongUrl] = useState<string>("");
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+
+    if (!longUrl.trim()) {
+      setInputError("URL을 입력해주세요.");
+      setData(null);
+      return;
+    }
+
+    setInputError(null);
+
+    const formData = new FormData();
+    formData.append("long_url", longUrl);
 
     const apiResponse = await shortenUrl(formData);
 
@@ -24,8 +37,6 @@ export default function ShortenUrlForm() {
       setError(apiResponse.error);
     }
   };
-
-  console.log(`data`, data);
 
   return (
     <form
@@ -41,13 +52,16 @@ export default function ShortenUrlForm() {
           Long URL:
         </label>
         <input
-          className="w-full bg-black/20 border border-white/20 rounded px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white/10"
+          className={`w-full bg-black/20 border ${
+            inputError ? "border-red-500" : "border-white/20"
+          } rounded px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white/10`}
           type="text"
-          name="long_url"
           id="long_url"
           placeholder="https://example.com"
-          required
+          value={longUrl}
+          onChange={(e) => setLongUrl(e.target.value)}
         />
+        {inputError && <p className="text-red-400 text-sm">{inputError}</p>}
       </div>
 
       <button
