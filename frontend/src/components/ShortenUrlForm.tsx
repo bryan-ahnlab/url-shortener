@@ -12,7 +12,9 @@ export default function ShortenUrlForm() {
   const [description, setDescription] = useState<string | null>(null);
 
   /* Request Error State */
-  const [inputError, setInputError] = useState<string | null>(null);
+  const [inputLongUrlError, setInputLongUrlError] = useState<string | null>(
+    null
+  );
 
   /* Response State */
   const [data, setData] = useState<ShortenUrlData | null>(null);
@@ -24,12 +26,12 @@ export default function ShortenUrlForm() {
     event.preventDefault();
 
     if (!longUrl?.trim()) {
-      setInputError("URL을 입력해주세요.");
+      setInputLongUrlError("URL을 입력해주세요.");
       setData(null);
       return;
     }
 
-    setInputError(null);
+    setInputLongUrlError(null);
 
     const formData = new FormData();
     formData.append("long_url", longUrl);
@@ -62,7 +64,7 @@ export default function ShortenUrlForm() {
         </label>
         <input
           className={`w-full bg-black/20 border ${
-            inputError ? "border-red-500" : "border-white/20"
+            inputLongUrlError ? "border-red-500" : "border-white/20"
           } rounded px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white/10`}
           type="text"
           id="long_url"
@@ -70,7 +72,9 @@ export default function ShortenUrlForm() {
           value={longUrl || ""}
           onChange={(e) => setLongUrl(e.target.value)}
         />
-        {inputError && <p className="text-red-400 text-sm">{inputError}</p>}
+        {inputLongUrlError && (
+          <p className="text-red-400 text-sm">{inputLongUrlError}</p>
+        )}
       </div>
 
       {/* Description 입력 */}
