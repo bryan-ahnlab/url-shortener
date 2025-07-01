@@ -22,14 +22,14 @@ export default function Loading() {
       </div>
 
       {/* 중앙 콘텐츠 */}
-      <div className="z-10 flex flex-col items-center px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10 rounded-xl border border-white/10 backdrop-blur-md bg-white/5 shadow-xl w-11/12 max-w-5xl">
+      <div className="z-10 flex flex-col items-center px-4 py-6 rounded-xl border border-white/10 backdrop-blur-md bg-white/5 shadow-xl max-w-5xl">
         {/* 로딩 스피너 */}
         <div className="animate-spin h-12 w-12 border-4 border-white border-t-transparent rounded-full mb-6"></div>
 
         {/* 설명 */}
-        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 w-full text-center leading-relaxed max-w-4xl flex flex-wrap justify-center break-words flex-col">
+        <p className="text-lg text-gray-300 w-full text-center leading-relaxed max-w-4xl flex flex-wrap justify-center break-words flex-col">
           <span className="font-semibold text-white">Loading in progress.</span>
-          <span className="ml-2">
+          <span className="mx-2">
             Please wait while we prepare your experience.
           </span>
         </p>

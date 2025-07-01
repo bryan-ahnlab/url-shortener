@@ -2,7 +2,13 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  /* Error test for error.tsx */
+  /* throw new Error(""); */
+
+  /* Loading test for loading.tsx */
+  /* await new Promise((resolve) => setTimeout(resolve, 99999999)); */
+
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   redirect("/auth");
 

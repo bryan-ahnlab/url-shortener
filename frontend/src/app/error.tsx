@@ -37,34 +37,34 @@ export default function Error({
       </div>
 
       {/* 중앙 콘텐츠 */}
-      <div className="z-10 flex flex-col items-center px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10 rounded-xl border border-white/10 backdrop-blur-md bg-white/5 shadow-xl w-11/12 max-w-5xl">
+      <div className="z-10 flex flex-col items-center px-4 py-6 rounded-xl border border-white/10 backdrop-blur-md bg-white/5 shadow-xl max-w-5xl">
         {/* 제목 */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 text-white drop-shadow-xl tracking-wide text-center break-words">
+        <h1 className="text-lg font-extrabold mb-6 text-white drop-shadow-xl tracking-wide text-center break-words">
           Oops!
         </h1>
 
         {/* 설명 */}
-        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 w-full text-center leading-relaxed max-w-4xl flex flex-wrap justify-center break-words flex-col">
+        <p className="text-lg text-gray-300 w-full text-center leading-relaxed max-w-4xl flex flex-wrap justify-center break-words flex-col mb-6">
           <span className="font-semibold text-white">
             An unexpected error occurred.
           </span>
-          <span className="ml-2">
+          <span className="mx-2">
             Please try refreshing the page or return to the previous page.
           </span>
-          <span className="ml-2">{error.message}</span>
+          <span className="mx-2">{error.message}</span>
         </p>
 
         {/* 버튼 */}
-        <div className="flex gap-6 flex-wrap justify-center">
+        <div className="w-full flex flex-row gap-4 justify-center">
           <button
             onClick={reset}
-            className="flex items-center justify-center px-5 py-3 bg-white text-black font-bold rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 hover:bg-gray-200 cursor-pointer text-base sm:text-lg"
+            className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200"
           >
             Try Again
           </button>
           <Link
             href="/"
-            className="flex items-center justify-center px-5 py-3 bg-white text-black font-bold rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 hover:bg-gray-200 text-base sm:text-lg"
+            className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200"
           >
             Go Back
           </Link>
