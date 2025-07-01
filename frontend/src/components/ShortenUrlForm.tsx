@@ -7,12 +7,18 @@ import { ShortenUrlData } from "@/types/response";
 import { normalizeUrl } from "@/utils/utility";
 
 export default function ShortenUrlForm() {
-  const [data, setData] = useState<ShortenUrlData | null>(null);
-  const [error, setError] = useState<ApiError | null>(null);
-
-  const [inputError, setInputError] = useState<string | null>(null);
+  /* Request State */
   const [longUrl, setLongUrl] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+
+  /* Request Error State */
+  const [inputError, setInputError] = useState<string | null>(null);
+
+  /* Response State */
+  const [data, setData] = useState<ShortenUrlData | null>(null);
+
+  /* Response Error State */
+  const [error, setError] = useState<ApiError | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
