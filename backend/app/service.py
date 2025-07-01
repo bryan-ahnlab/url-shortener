@@ -1,6 +1,8 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from core.setting import settings
 
@@ -17,6 +19,7 @@ app = FastAPI(
     openapi_url="/openapi.json",
 )
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -27,6 +30,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(short_url_router)
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "type": f"{request.base_url}docs",
+            "title": "Error",
+            "status": exc.status_code,
+            "detail": exc.detail or "Unexpected error",
+            "instance": str(request.url),
+            "method": request.method,
+        },
+    )
 
 
 @app.on_event("startup")
