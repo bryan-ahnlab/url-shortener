@@ -33,7 +33,7 @@ export async function createShortUrl(
           detail: responseData?.detail || "Unexpected error",
           instance: responseData?.instance || "",
           method: responseData?.method || "POST",
-        }),
+        }).toJSON(),
       };
     }
 
@@ -45,7 +45,7 @@ export async function createShortUrl(
     console.error("Error:", error);
     return {
       ok: false,
-      error: new ApiError(DEFAULT_API_ERROR),
+      error: new ApiError(DEFAULT_API_ERROR).toJSON(),
     };
   }
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createShortUrl } from "@/actions/short-url";
-import { ApiError } from "@/types/error";
+import { ApiErrorShape } from "@/types/error";
 import { ShortenUrlData } from "@/types/response";
 import { normalizeUrl } from "@/utils/utility";
 
@@ -20,7 +20,7 @@ export default function ShortUrlForm() {
   const [data, setData] = useState<ShortenUrlData | null>(null);
 
   /* Response Error State */
-  const [error, setError] = useState<ApiError | null>(null);
+  const [error, setError] = useState<ApiErrorShape | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

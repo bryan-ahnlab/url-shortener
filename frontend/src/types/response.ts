@@ -1,4 +1,4 @@
-import { ApiError } from "@/types/error";
+import { ApiErrorShape } from "@/types/error";
 
 /* interface: object structure for convention  */
 /* type: integrated api response for readability  */
@@ -10,7 +10,7 @@ interface ApiSuccess<T> {
 
 interface ApiFailure {
   ok: false;
-  error: ApiError;
+  error: ApiErrorShape;
 }
 
 export type ApiResult<T> = ApiSuccess<T> | ApiFailure;
@@ -27,6 +27,21 @@ export interface ShortenUrlData {
     long_url: string;
     description: string | null;
     short_url: string;
+    created_at: string;
+  };
+}
+
+export interface LoginUserData {
+  status: number;
+  message: string;
+  request: {
+    email: string;
+    password: string;
+  };
+  response: {
+    id: string;
+    email: string;
+    description: string | null;
     created_at: string;
   };
 }
