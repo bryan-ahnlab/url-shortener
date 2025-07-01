@@ -29,9 +29,9 @@ export default function ShortenUrlForm() {
       setInputLongUrlError("URL을 입력해주세요.");
       setData(null);
       return;
+    } else {
+      setInputLongUrlError(null);
     }
-
-    setInputLongUrlError(null);
 
     const formData = new FormData(event.currentTarget);
     formData.append("long_url", longUrl);
@@ -71,6 +71,7 @@ export default function ShortenUrlForm() {
           value={longUrl || ""}
           onChange={(e) => setLongUrl(e.target.value)}
         />
+        {/* Long URL 에러 메시지 */}
         {inputLongUrlError && (
           <p className="text-red-400 text-sm">{inputLongUrlError}</p>
         )}
