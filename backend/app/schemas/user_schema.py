@@ -31,6 +31,11 @@ class LoginResponse(BaseModel):
     id: str
     email: EmailStr
     name: str
+    phone: str
+    address: str
+    birth: datetime.date
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
 
 
 class UpdateRequest(BaseModel):

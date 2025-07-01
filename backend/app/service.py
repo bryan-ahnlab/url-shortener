@@ -6,7 +6,7 @@ from core.setting import settings
 
 from db.database import Base, createDatabaseEngine, dropDatabaseEngine
 
-from routes.url_route import url_router
+from routes.short_url_route import short_url_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -26,7 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.include_router(url_router)
+app.include_router(short_url_router)
 
 
 @app.on_event("startup")

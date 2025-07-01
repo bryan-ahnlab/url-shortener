@@ -2,28 +2,32 @@ from fastapi import APIRouter, Depends, Request, status
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.encoders import jsonable_encoder
 
-from schemas import url_schema
-from crud import url_crud
+from schemas import short_url_schema
+from crud import short_url_crud
 
-url_router = APIRouter()
+short_url_router = APIRouter()
 
 
-@url_router.post(
-    "/url", response_class=JSONResponse, response_model=url_schema.ShortenUrlResponse
+@short_url_router.post(
+    "/short-url",
+    response_class=JSONResponse,
+    response_model=short_url_schema.CreateShortUrlResponse,
 )
-async def create_url(request: Request, payload: url_schema.ShortenUrlRequest):
+async def create_short_url(
+    request: Request, payload: short_url_schema.CreateShortUrlRequest
+):
     try:
         # 테스트용 강제 에러
         # raise Exception("Test error")
 
-        data = url_crud.create_url(payload)
+        data = short_url_crud.create_short_url(payload)
 
     except Exception as error:
         base_url = str(request.base_url).rstrip("/")
         instance = str(request.url)
 
         error_response = {
-            "type": f"{base_url}/docs#/default/create_url_url_post",
+            "type": f"{base_url}/docs#/default/create_short_url_short_url_post",
             "title": "Internal Server Error",
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
@@ -38,17 +42,19 @@ async def create_url(request: Request, payload: url_schema.ShortenUrlRequest):
         "status": status.HTTP_200_OK,
         "message": "create",
         "request": payload,
-        "data": data,
+        "response": data,
     }
     return JSONResponse(
         status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
     )
 
 
-@url_router.get("/{short_url}")
-async def read_url(request: Request, payload: url_schema.RedirectUrl = Depends()):
+@short_url_router.get("/{short_url}")
+async def read_short_url(
+    request: Request, payload: short_url_schema.ReadShortUrlRequest = Depends()
+):
     try:
-        data = url_crud.read_url(payload)
+        data = short_url_crud.read_short_url(payload)
 
         if data is not None:
             long_url = data.long_url
@@ -62,7 +68,7 @@ async def read_url(request: Request, payload: url_schema.RedirectUrl = Depends()
         instance = str(request.url)
 
         error_response = {
-            "type": f"{base_url}/docs#/default/read_url__short_url__get",
+            "type": f"{base_url}/docs#/default/read_short_url__short_url_schema__get",
             "title": "Resource Not Found",
             "status": status.HTTP_404_NOT_FOUND,
             "detail": f"Short URL '{payload.short_url}' does not exist.",
@@ -78,7 +84,7 @@ async def read_url(request: Request, payload: url_schema.RedirectUrl = Depends()
         instance = str(request.url)
 
         error_response = {
-            "type": f"{base_url}/docs#/default/read_url__short_url__get",
+            "type": f"{base_url}/docs#/default/read_short_url__short_url_schema__get",
             "title": "Internal Server Error",
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
