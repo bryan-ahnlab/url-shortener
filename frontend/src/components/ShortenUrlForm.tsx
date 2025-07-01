@@ -8,8 +8,8 @@ import { normalizeUrl } from "@/utils/utility";
 
 export default function ShortenUrlForm() {
   /* Request State */
-  const [longUrl, setLongUrl] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [longUrl, setLongUrl] = useState<string | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
 
   /* Request Error State */
   const [inputError, setInputError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export default function ShortenUrlForm() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!longUrl.trim()) {
+    if (!longUrl?.trim()) {
       setInputError("URL을 입력해주세요.");
       setData(null);
       return;
@@ -33,7 +33,7 @@ export default function ShortenUrlForm() {
 
     const formData = new FormData();
     formData.append("long_url", longUrl);
-    formData.append("description", description);
+    formData.append("description", description || "");
 
     const apiResponse = await shortenUrl(formData);
 
@@ -67,7 +67,7 @@ export default function ShortenUrlForm() {
           type="text"
           id="long_url"
           placeholder="https://example.com"
-          value={longUrl}
+          value={longUrl || ""}
           onChange={(e) => setLongUrl(e.target.value)}
         />
         {inputError && <p className="text-red-400 text-sm">{inputError}</p>}
@@ -83,7 +83,7 @@ export default function ShortenUrlForm() {
           type="text"
           id="description"
           placeholder="설명을 입력하세요"
-          value={description}
+          value={description || ""}
           onChange={(e) => setDescription(e.target.value)}
         />
       </div>
