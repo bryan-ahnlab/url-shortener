@@ -4,7 +4,7 @@ import ShortenUrlForm from "@/components/ShortenUrlForm";
 
 export default function ShortenPage() {
   return (
-    <div className="mx-auto px-5 py-10 min-w-[360px]">
+    <div className="mx-auto px-5 py-10">
       <ShortenUrlForm />
     </div>
   );

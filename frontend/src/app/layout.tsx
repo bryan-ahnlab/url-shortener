@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "URL Shortener",
-  description: "URL Shortener by Next.js",
+  title: "App",
+  description: "App by Next.js",
 };
 
 export default function RootLayout({

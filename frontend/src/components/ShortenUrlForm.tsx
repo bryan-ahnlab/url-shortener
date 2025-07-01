@@ -43,7 +43,7 @@ export default function ShortenUrlForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 p-6 border border-white/10 rounded-xl shadow-xl backdrop-blur-lg bg-white/5 w-full"
+      className="flex flex-col gap-4 p-6 border border-white/10 rounded-xl shadow-xl backdrop-blur-lg bg-white/5 w-full min-w-[360px]"
     >
       <h2 className="text-lg font-semibold text-white text-center">
         Enter URL
@@ -81,6 +81,9 @@ export default function ShortenUrlForm() {
           onChange={(e) => setDescription(e.target.value)}
         />
       </div>
+
+      {/* 공백 */}
+      <div className="h-4"></div>
 
       {/* 제출 버튼 */}
       <button
