@@ -57,8 +57,6 @@ export default function UserLoginForm() {
     }
   };
 
-  console.log(data);
-
   return (
     <form
       onSubmit={handleSubmit}

@@ -1,21 +1,30 @@
-from models.user_model import User
 from db.database import SessionLocal
+
+from models.user_model import User
+from schemas.user_schema import (
+    CreateUserRequest,
+    ReadUserRequest,
+    UpdateUserRequest,
+    DeleteUserRequest,
+)
+
 from passlib.hash import bcrypt
 
 
-def create_user(payload):
+def create_user(request: CreateUserRequest):
     db = SessionLocal()
     try:
-        hashed_password = bcrypt.hash(payload.password)
+        hashed_password = bcrypt.hash(request.password)
 
         new_user = User(
-            email=payload.email,
+            email=request.email,
             password=hashed_password,
-            name=payload.name,
-            phone=payload.phone,
-            address=payload.address,
-            birth=payload.birth,
+            name=request.name,
+            phone=request.phone,
+            address=request.address,
+            birth=request.birth,
         )
+
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
@@ -28,7 +37,7 @@ def create_user(payload):
         db.close()
 
 
-def get_user_by_email(email: str):
+def read_user_by_email(email: str):
     db = SessionLocal()
     try:
         return db.query(User).filter(User.email == email).first()
@@ -40,18 +49,20 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.verify(plain_password, hashed_password)
 
 
-def update_user(email: str, payload):
+def update_user(request: UpdateUserRequest):
     db = SessionLocal()
     try:
-        user = db.query(User).filter(User.email == email).first()
+        user = db.query(User).filter(User.id == request.id).first()
 
         if not user:
             return None
 
-        user.name = payload.name
-        user.phone = payload.phone
-        user.address = payload.address
-        user.birth = payload.birth
+        user.email = request.email
+        user.password = bcrypt.hash(request.password)
+        user.name = request.name
+        user.phone = request.phone
+        user.address = request.address
+        user.birth = request.birth
 
         db.commit()
         db.refresh(user)
@@ -64,10 +75,18 @@ def update_user(email: str, payload):
         db.close()
 
 
-def delete_user(email: str):
+def read_user_by_id(id: str):
     db = SessionLocal()
     try:
-        user = db.query(User).filter(User.email == email).first()
+        return db.query(User).filter(User.id == id).first()
+    finally:
+        db.close()
+
+
+def delete_user(id: str):
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.id == id).first()
 
         if not user:
             return False

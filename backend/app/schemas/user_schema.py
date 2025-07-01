@@ -2,7 +2,7 @@ import datetime
 from pydantic import BaseModel, EmailStr
 
 
-class SignUpRequest(BaseModel):
+class CreateUserRequest(BaseModel):
     email: EmailStr
     password: str
     name: str
@@ -11,25 +11,19 @@ class SignUpRequest(BaseModel):
     birth: datetime.date
 
 
-class SignUpResponse(BaseModel):
+class CreateUserResponse(CreateUserRequest):
     id: str
-    email: EmailStr
-    name: str
-    phone: str
-    address: str
-    birth: datetime.date
     created_at: datetime.datetime
     updated_at: datetime.datetime
 
 
-class LoginRequest(BaseModel):
+class ReadUserRequest(BaseModel):
     email: EmailStr
     password: str
 
 
-class LoginResponse(BaseModel):
+class ReadUserResponse(ReadUserRequest):
     id: str
-    email: EmailStr
     name: str
     phone: str
     address: str
@@ -38,8 +32,31 @@ class LoginResponse(BaseModel):
     updated_at: datetime.datetime
 
 
-class UpdateRequest(BaseModel):
+class UpdateUserRequest(BaseModel):
+    id: str
+    email: EmailStr
+    password: str
     name: str
     phone: str
     address: str
     birth: datetime.date
+
+
+class UpdateUserResponse(UpdateUserRequest):
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+
+class DeleteUserRequest(BaseModel):
+    id: str
+    email: EmailStr
+    password: str
+
+
+class DeleteUserResponse(DeleteUserRequest):
+    name: str
+    phone: str
+    address: str
+    birth: datetime.date
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
