@@ -33,9 +33,8 @@ export default function ShortenUrlForm() {
 
     setInputLongUrlError(null);
 
-    const formData = new FormData();
+    const formData = new FormData(event.currentTarget);
     formData.append("long_url", longUrl);
-    formData.append("description", description || "");
 
     const apiResponse = await shortenUrl(formData);
 
@@ -86,6 +85,7 @@ export default function ShortenUrlForm() {
           className="w-full bg-black/20 border border-white/20 rounded px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white/10"
           type="text"
           id="description"
+          name="description"
           placeholder="설명을 입력하세요"
           value={description || ""}
           onChange={(e) => setDescription(e.target.value)}
