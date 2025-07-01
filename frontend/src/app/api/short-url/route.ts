@@ -5,7 +5,7 @@ export async function POST(rawRequest: NextRequest) {
 
   try {
     const apiResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/url`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/short-url`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -4,13 +4,13 @@ import { ApiError, DEFAULT_API_ERROR } from "@/types/error";
 import { safeParseJson } from "@/utils/utility";
 import { ApiResult, ShortenUrlData } from "@/types/response";
 
-export async function shortenUrl(
+export async function createShortUrl(
   formData: FormData
 ): Promise<ApiResult<ShortenUrlData>> {
   const formObject = Object.fromEntries(formData.entries());
 
   try {
-    const apiResponse = await fetch(`${process.env.BASE_URL}/api/url`, {
+    const apiResponse = await fetch(`${process.env.BASE_URL}/api/short-url`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formObject),
@@ -37,16 +37,9 @@ export async function shortenUrl(
       };
     }
 
-    const mappedData = {
-      status: responseData.status,
-      message: responseData.message,
-      request: responseData.request,
-      response: responseData.data,
-    };
-
     return {
       ok: true,
-      data: mappedData,
+      data: responseData,
     };
   } catch (error) {
     console.error("Error:", error);

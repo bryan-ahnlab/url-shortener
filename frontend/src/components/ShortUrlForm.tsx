@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { shortenUrl } from "@/actions/shorten";
+import { createShortUrl } from "@/actions/short-url";
 import { ApiError } from "@/types/error";
 import { ShortenUrlData } from "@/types/response";
 import { normalizeUrl } from "@/utils/utility";
 
-export default function ShortenUrlForm() {
+export default function ShortUrlForm() {
   /* Request State */
   const [longUrl, setLongUrl] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
@@ -36,7 +36,7 @@ export default function ShortenUrlForm() {
     const formData = new FormData(event.currentTarget);
     formData.append("long_url", longUrl);
 
-    const apiResponse = await shortenUrl(formData);
+    const apiResponse = await createShortUrl(formData);
 
     if (apiResponse.ok) {
       setData(apiResponse.data);
