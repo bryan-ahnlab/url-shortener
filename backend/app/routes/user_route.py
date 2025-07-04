@@ -4,160 +4,211 @@ from fastapi.encoders import jsonable_encoder
 
 from schemas import user_schema
 from crud import user_crud
+from crud import user_activity_history_crud
 
 user_router = APIRouter()
 
 
 @user_router.post(
-    "/user",
-    response_class=JSONResponse,
-    response_model=user_schema.CreateUserResponse,
+    "/user", response_class=JSONResponse, response_model=user_schema.CreateUserResponse
 )
 async def create_user(request: Request, payload: user_schema.CreateUserRequest):
     try:
-        if user_crud.read_user_by_email(payload.email):
+        existing_user = user_crud.read_user_by_email(payload.email)
+        if existing_user:
             base_url = str(request.base_url).rstrip("/")
             instance = str(request.url)
 
-            error_response = {
-                "type": f"{base_url}/docs#/default/create_user_user_post",
-                "title": "Conflict",
-                "status": status.HTTP_409_CONFLICT,
-                "detail": "User already exists.",
-                "instance": instance,
-                "method": "POST",
-            }
             return JSONResponse(
-                status_code=status.HTTP_409_CONFLICT, content=error_response
+                status_code=status.HTTP_409_CONFLICT,
+                content={
+                    "type": f"{base_url}/docs#/default/create_user_user_post",
+                    "title": "Conflict",
+                    "status": status.HTTP_409_CONFLICT,
+                    "detail": "User already exists.",
+                    "instance": instance,
+                    "method": "POST",
+                },
             )
 
-        data = user_crud.create_user(payload)
+        user = user_crud.create_user(payload)
 
-        response = {
-            "status": status.HTTP_200_OK,
-            "message": "create",
-            "request": payload,
-            "response": data,
-        }
+        client_ip = request.headers.get("X-Forwarded-For") or (
+            request.client.host if request.client else None
+        )
+        user_agent = request.headers.get("User-Agent")
+        location = request.headers.get("X-Geo-Location")
+
+        user_activity_history_crud.create_user_activity_history(
+            user_id=user.id,
+            email=user.email,
+            activity_type="CREATE",
+            description="User created",
+            ip_address=client_ip,
+            user_agent=user_agent,
+            location=location,
+        )
+
         return JSONResponse(
-            status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
+            status_code=status.HTTP_200_OK,
+            content=jsonable_encoder(
+                {
+                    "status": status.HTTP_200_OK,
+                    "message": "create",
+                    "request": payload,
+                    "response": user,
+                }
+            ),
         )
 
     except Exception as error:
         base_url = str(request.base_url).rstrip("/")
         instance = str(request.url)
 
-        error_response = {
-            "type": f"{base_url}/docs#/default/create_user_user_post",
-            "title": "Internal Server Error",
-            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
-            "detail": str(error),
-            "instance": instance,
-            "method": "POST",
-        }
         return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "type": f"{base_url}/docs#/default/create_user_user_post",
+                "title": "Internal Server Error",
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "detail": str(error),
+                "instance": instance,
+                "method": "POST",
+            },
         )
 
 
 @user_router.get("/user/{id}")
 async def read_user(request: Request, payload: user_schema.ReadUserRequest = Depends()):
     try:
-        data = user_crud.read_user(payload)
-
-        if data is not None:
-            response = {
-                "status": status.HTTP_200_OK,
-                "message": "read",
-                "request": payload,
-                "response": data,
-            }
+        existing_user = user_crud.read_user(payload)
+        if not existing_user:
+            base_url = str(request.base_url).rstrip("/")
+            instance = str(request.url)
 
             return JSONResponse(
-                status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={
+                    "type": f"{base_url}/docs#/default/read_user_user__id__get",
+                    "title": "Not Found",
+                    "status": status.HTTP_404_NOT_FOUND,
+                    "detail": "User not found.",
+                    "instance": instance,
+                    "method": "GET",
+                },
             )
 
-        base_url = str(request.base_url).rstrip("/")
-        instance = str(request.url)
+        client_ip = request.headers.get("X-Forwarded-For") or (
+            request.client.host if request.client else None
+        )
+        user_agent = request.headers.get("User-Agent")
+        location = request.headers.get("X-Geo-Location")
 
-        error_response = {
-            "type": f"{base_url}/docs#/default/read_user_user__id__get",
-            "title": "Resource Not Found",
-            "status": status.HTTP_404_NOT_FOUND,
-            "detail": f"User '{payload.id}' does not exist.",
-            "instance": instance,
-            "method": "GET",
-        }
+        user_activity_history_crud.create_user_activity_history(
+            user_id=existing_user.id,
+            email=existing_user.email,
+            activity_type="READ",
+            description="User read",
+            ip_address=client_ip,
+            user_agent=user_agent,
+            location=location,
+        )
+
         return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND, content=error_response
+            status_code=status.HTTP_200_OK,
+            content=jsonable_encoder(
+                {
+                    "status": status.HTTP_200_OK,
+                    "message": "read",
+                    "request": payload,
+                    "response": existing_user,
+                }
+            ),
         )
 
     except Exception as error:
         base_url = str(request.base_url).rstrip("/")
         instance = str(request.url)
 
-        error_response = {
-            "type": f"{base_url}/docs#/default/read_user_user__id__get",
-            "title": "Internal Server Error",
-            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
-            "detail": str(error),
-            "instance": instance,
-            "method": "GET",
-        }
         return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "type": f"{base_url}/docs#/default/read_user_user__id__get",
+                "title": "Internal Server Error",
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "detail": str(error),
+                "instance": instance,
+                "method": "GET",
+            },
         )
 
 
 @user_router.put(
-    "/user",
-    response_class=JSONResponse,
-    response_model=user_schema.UpdateUserResponse,
+    "/user", response_class=JSONResponse, response_model=user_schema.UpdateUserResponse
 )
 async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
     try:
-        if not user_crud.read_user(payload):
+        existing_user = user_crud.read_user(payload)
+        if not existing_user:
             base_url = str(request.base_url).rstrip("/")
             instance = str(request.url)
 
-            error_response = {
-                "type": f"{base_url}/docs#/default/update_user_user_put",
-                "title": "Not Found",
-                "status": status.HTTP_404_NOT_FOUND,
-                "detail": "User not found.",
-                "instance": instance,
-                "method": "PUT",
-            }
             return JSONResponse(
-                status_code=status.HTTP_404_NOT_FOUND, content=error_response
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={
+                    "type": f"{base_url}/docs#/default/update_user_user_put",
+                    "title": "Not Found",
+                    "status": status.HTTP_404_NOT_FOUND,
+                    "detail": "User not found.",
+                    "instance": instance,
+                    "method": "GET",
+                },
             )
 
-        data = user_crud.update_user(payload)
+        user = user_crud.update_user(payload)
 
-        response = {
-            "status": status.HTTP_200_OK,
-            "message": "update",
-            "request": payload,
-            "response": data,
-        }
+        client_ip = request.headers.get("X-Forwarded-For") or (
+            request.client.host if request.client else None
+        )
+        user_agent = request.headers.get("User-Agent")
+        location = request.headers.get("X-Geo-Location")
+
+        user_activity_history_crud.create_user_activity_history(
+            user_id=existing_user.id,
+            email=existing_user.email,
+            activity_type="UPDATE",
+            description="User updated",
+            ip_address=client_ip,
+            user_agent=user_agent,
+            location=location,
+        )
+
         return JSONResponse(
-            status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
+            status_code=status.HTTP_200_OK,
+            content=jsonable_encoder(
+                {
+                    "status": status.HTTP_200_OK,
+                    "message": "update",
+                    "request": payload,
+                    "response": user,
+                }
+            ),
         )
 
     except Exception as error:
         base_url = str(request.base_url).rstrip("/")
         instance = str(request.url)
 
-        error_response = {
-            "type": f"{base_url}/docs#/default/update_user_user_put",
-            "title": "Internal Server Error",
-            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
-            "detail": str(error),
-            "instance": instance,
-            "method": "PUT",
-        }
         return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "type": f"{base_url}/docs#/default/update_user_user_put",
+                "title": "Internal Server Error",
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "detail": str(error),
+                "instance": instance,
+                "method": "PUT",
+            },
         )
 
 
@@ -166,73 +217,97 @@ async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
 )
 async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
     try:
-        # ID로 유저 조회
-        user = user_crud.read_user(payload)
+        existing_user = user_crud.read_user(payload)
+        if not existing_user:
+            base_url = str(request.base_url).rstrip("/")
+            instance = str(request.url)
 
-        if not user:
             return JSONResponse(
                 status_code=status.HTTP_404_NOT_FOUND,
                 content={
-                    "type": f"{str(request.base_url).rstrip('/')}/docs#/default/delete_user_user_delete",
+                    "type": f"{base_url}/docs#/default/delete_user_user_delete",
                     "title": "Not Found",
                     "status": status.HTTP_404_NOT_FOUND,
                     "detail": "User not found.",
-                    "instance": str(request.url),
+                    "instance": instance,
                     "method": "DELETE",
                 },
             )
 
-        # 이메일 일치 여부 확인
-        if user.email != payload.email:
+        if existing_user.email != payload.email:
+            base_url = str(request.base_url).rstrip("/")
+            instance = str(request.url)
+
             return JSONResponse(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 content={
-                    "type": f"{str(request.base_url).rstrip('/')}/docs#/default/delete_user_user_delete",
+                    "type": f"{base_url}/docs#/default/delete_user_user_delete",
                     "title": "Bad Request",
                     "status": status.HTTP_400_BAD_REQUEST,
                     "detail": "Email does not match.",
-                    "instance": str(request.url),
+                    "instance": instance,
                     "method": "DELETE",
                 },
             )
 
-        # 비밀번호 확인
-        if not user_crud.verify_password(payload.password, user.password):
+        if not user_crud.verify_password(payload.password, existing_user.password):
+            base_url = str(request.base_url).rstrip("/")
+            instance = str(request.url)
+
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content={
-                    "type": f"{str(request.base_url).rstrip('/')}/docs#/default/delete_user_user_delete",
+                    "type": f"{base_url}/docs#/default/delete_user_user_delete",
                     "title": "Unauthorized",
                     "status": status.HTTP_401_UNAUTHORIZED,
                     "detail": "Invalid password.",
-                    "instance": str(request.url),
+                    "instance": instance,
                     "method": "DELETE",
                 },
             )
 
-        # 삭제 수행 및 기존 정보 반환
-        data = user_crud.delete_user(payload)
+        user = user_crud.delete_user(payload)
 
-        response = {
-            "status": status.HTTP_200_OK,
-            "message": "delete",
-            "request": payload,
-            "response": data,
-        }
+        client_ip = request.headers.get("X-Forwarded-For") or (
+            request.client.host if request.client else None
+        )
+        user_agent = request.headers.get("User-Agent")
+        location = request.headers.get("X-Geo-Location")
+
+        user_activity_history_crud.create_user_activity_history(
+            user_id=existing_user.id,
+            email=existing_user.email,
+            activity_type="DELETE",
+            description="User deleted",
+            ip_address=client_ip,
+            user_agent=user_agent,
+            location=location,
+        )
 
         return JSONResponse(
-            status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
+            status_code=status.HTTP_200_OK,
+            content=jsonable_encoder(
+                {
+                    "status": status.HTTP_200_OK,
+                    "message": "delete",
+                    "request": payload,
+                    "response": user,
+                }
+            ),
         )
 
     except Exception as error:
+        base_url = str(request.base_url).rstrip("/")
+        instance = str(request.url)
+
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={
-                "type": f"{str(request.base_url).rstrip('/')}/docs#/default/delete_user_user_delete",
+                "type": f"{base_url}/docs#/default/delete_user_user_delete",
                 "title": "Internal Server Error",
                 "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
                 "detail": str(error),
-                "instance": str(request.url),
+                "instance": instance,
                 "method": "DELETE",
             },
         )
@@ -245,62 +320,79 @@ async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
 )
 async def login_user(request: Request, payload: user_schema.LoginUserRequest):
     try:
-        data = user_crud.read_user_by_email(payload.email)
-
-        if not data:
+        existing_user = user_crud.read_user_by_email(payload.email)
+        if not existing_user:
             base_url = str(request.base_url).rstrip("/")
             instance = str(request.url)
 
-            error_response = {
-                "type": f"{base_url}/docs#/default/login_user_user_login_post",
-                "title": "Not Found",
-                "status": status.HTTP_404_NOT_FOUND,
-                "detail": "User not found.",
-                "instance": instance,
-                "method": "POST",
-            }
             return JSONResponse(
-                status_code=status.HTTP_404_NOT_FOUND, content=error_response
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={
+                    "type": f"{base_url}/docs#/default/login_user_user_login_post",
+                    "title": "Not Found",
+                    "status": status.HTTP_404_NOT_FOUND,
+                    "detail": "User not found.",
+                    "instance": instance,
+                    "method": "POST",
+                },
             )
 
-        if not user_crud.verify_password(payload.password, data.password):
+        if not user_crud.verify_password(payload.password, existing_user.password):
             base_url = str(request.base_url).rstrip("/")
             instance = str(request.url)
 
-            error_response = {
-                "type": f"{base_url}/docs#/default/login_user_user_login_post",
-                "title": "Unauthorized",
-                "status": status.HTTP_401_UNAUTHORIZED,
-                "detail": "Invalid email or password.",
-                "instance": instance,
-                "method": "POST",
-            }
             return JSONResponse(
-                status_code=status.HTTP_401_UNAUTHORIZED, content=error_response
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content={
+                    "type": f"{base_url}/docs#/default/login_user_user_login_post",
+                    "title": "Unauthorized",
+                    "status": status.HTTP_401_UNAUTHORIZED,
+                    "detail": "Invalid email or password.",
+                    "instance": instance,
+                    "method": "POST",
+                },
             )
 
-        response = {
-            "status": status.HTTP_200_OK,
-            "message": "read",
-            "request": payload,
-            "response": data,
-        }
+        client_ip = request.headers.get("X-Forwarded-For") or (
+            request.client.host if request.client else None
+        )
+        user_agent = request.headers.get("User-Agent")
+        location = request.headers.get("X-Geo-Location")
+
+        user_activity_history_crud.create_user_activity_history(
+            user_id=existing_user.id,
+            email=existing_user.email,
+            activity_type="LOGIN",
+            description="User logged in",
+            ip_address=client_ip,
+            user_agent=user_agent,
+            location=location,
+        )
+
         return JSONResponse(
-            status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
+            status_code=status.HTTP_200_OK,
+            content=jsonable_encoder(
+                {
+                    "status": status.HTTP_200_OK,
+                    "message": "read",
+                    "request": payload,
+                    "response": existing_user,
+                }
+            ),
         )
 
     except Exception as error:
         base_url = str(request.base_url).rstrip("/")
         instance = str(request.url)
 
-        error_response = {
-            "type": f"{base_url}/docs#/default/login_user_user_login_post",
-            "title": "Internal Server Error",
-            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
-            "detail": str(error),
-            "instance": instance,
-            "method": "POST",
-        }
         return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "type": f"{base_url}/docs#/default/login_user_user_login_post",
+                "title": "Internal Server Error",
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "detail": str(error),
+                "instance": instance,
+                "method": "POST",
+            },
         )

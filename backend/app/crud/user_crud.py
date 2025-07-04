@@ -1,3 +1,4 @@
+from pydantic import EmailStr
 from db.database import SessionLocal
 
 from models.user_model import User
@@ -37,7 +38,7 @@ def create_user(request: CreateUserRequest):
         db.close()
 
 
-def read_user_by_email(email: str):
+def read_user_by_email(email: EmailStr):
     db = SessionLocal()
     try:
         return db.query(User).filter(User.email == email).first()
