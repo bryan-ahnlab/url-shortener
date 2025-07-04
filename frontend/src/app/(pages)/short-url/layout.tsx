@@ -1,5 +1,3 @@
-// src/app/shorten/layout.tsx
-
 export default function ShortenLayout({
   children,
 }: {

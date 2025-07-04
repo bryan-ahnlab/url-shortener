@@ -1,5 +1,3 @@
-// src/app/shorten/page.tsx
-
 import CreateShortUrlForm from "@/components/CreateShortUrlForm";
 
 export default function ShortUrlPage() {

@@ -1,5 +1,3 @@
-// src/app/shorten/page.tsx
-
 import CreateUserLoginForm from "@/components/CreateUserLoginForm";
 
 export default function ShortenPage() {
