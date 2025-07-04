@@ -226,7 +226,10 @@ async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
 @user_router.delete(
     "/user", response_class=JSONResponse, response_model=user_schema.DeleteUserResponse
 )
-async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
+async def delete_user(
+    request: Request,
+    payload: user_schema.DeleteUserRequest = Depends(),
+):
     try:
         existing_user = user_crud.read_user(payload)
         if not existing_user:

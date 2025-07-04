@@ -177,7 +177,7 @@ async def update_user_activity_history(
 )
 async def delete_user_activity_history(
     request: Request,
-    payload: user_activity_history_schema.DeleteUserActivityHistoryRequest,
+    payload: user_activity_history_schema.DeleteUserActivityHistoryRequest = Depends(),
 ):
     try:
         existing_history = user_activity_history_crud.read_user_activity_history(
