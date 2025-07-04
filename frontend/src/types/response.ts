@@ -83,7 +83,7 @@ export interface DeleteUserData {
   request: {
     id: string;
   };
-  response: boolean;
+  response: UserResponse;
 }
 
 // 회원 정보 조회

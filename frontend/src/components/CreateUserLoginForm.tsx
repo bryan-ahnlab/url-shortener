@@ -6,6 +6,7 @@ import { ApiErrorShape } from "@/types/error";
 import { LoginUserData } from "@/types/response";
 
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 
 export default function CreateUserLoginForm() {
   /* Request State */
@@ -130,6 +131,27 @@ export default function CreateUserLoginForm() {
 
       {/* 공백 */}
       <div className="h-4"></div>
+
+      <div className="flex flex-row gap-2">
+        <Link
+          href="/user/create"
+          className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center"
+        >
+          Create
+        </Link>
+        <Link
+          href="/user/update"
+          className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center"
+        >
+          Update
+        </Link>
+        <Link
+          href="/user/delete"
+          className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center"
+        >
+          Delete
+        </Link>
+      </div>
 
       {/* 로그인 버튼 */}
       <button
