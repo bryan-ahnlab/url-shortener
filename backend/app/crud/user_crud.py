@@ -45,7 +45,7 @@ def read_user_by_email(email: str):
         db.close()
 
 
-def read_user(request: ReadUserRequest | UpdateUserRequest):
+def read_user(request: ReadUserRequest | UpdateUserRequest | DeleteUserRequest):
     db = SessionLocal()
     try:
         return db.query(User).filter(User.id == request.id).first()
@@ -79,17 +79,17 @@ def update_user(request: UpdateUserRequest):
         db.close()
 
 
-def delete_user(id: str):
+def delete_user(request: DeleteUserRequest):
     db = SessionLocal()
     try:
-        user = db.query(User).filter(User.id == id).first()
+        user = db.query(User).filter(User.id == request.id).first()
 
         if not user:
-            return False
+            return None
 
         db.delete(user)
         db.commit()
-        return True
+        return user
     except Exception as error:
         db.rollback()
         raise error

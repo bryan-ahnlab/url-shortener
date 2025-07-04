@@ -161,26 +161,57 @@ async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
         )
 
 
-@user_router.delete("/user", response_class=JSONResponse)
+@user_router.delete(
+    "/user", response_class=JSONResponse, response_model=user_schema.DeleteUserResponse
+)
 async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
     try:
-        data = user_crud.delete_user(payload.id)
+        # ID로 유저 조회
+        user = user_crud.read_user(payload)
 
-        if not data:
-            base_url = str(request.base_url).rstrip("/")
-            instance = str(request.url)
-
-            error_response = {
-                "type": f"{base_url}/docs#/default/delete_user_user_delete",
-                "title": "Not Found",
-                "status": status.HTTP_404_NOT_FOUND,
-                "detail": "User not found.",
-                "instance": instance,
-                "method": "DELETE",
-            }
+        if not user:
             return JSONResponse(
-                status_code=status.HTTP_404_NOT_FOUND, content=error_response
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={
+                    "type": f"{str(request.base_url).rstrip('/')}/docs#/default/delete_user_user_delete",
+                    "title": "Not Found",
+                    "status": status.HTTP_404_NOT_FOUND,
+                    "detail": "User not found.",
+                    "instance": str(request.url),
+                    "method": "DELETE",
+                },
             )
+
+        # 이메일 일치 여부 확인
+        if user.email != payload.email:
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={
+                    "type": f"{str(request.base_url).rstrip('/')}/docs#/default/delete_user_user_delete",
+                    "title": "Bad Request",
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "detail": "Email does not match.",
+                    "instance": str(request.url),
+                    "method": "DELETE",
+                },
+            )
+
+        # 비밀번호 확인
+        if not user_crud.verify_password(payload.password, user.password):
+            return JSONResponse(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content={
+                    "type": f"{str(request.base_url).rstrip('/')}/docs#/default/delete_user_user_delete",
+                    "title": "Unauthorized",
+                    "status": status.HTTP_401_UNAUTHORIZED,
+                    "detail": "Invalid password.",
+                    "instance": str(request.url),
+                    "method": "DELETE",
+                },
+            )
+
+        # 삭제 수행 및 기존 정보 반환
+        data = user_crud.delete_user(payload)
 
         response = {
             "status": status.HTTP_200_OK,
@@ -188,24 +219,22 @@ async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
             "request": payload,
             "response": data,
         }
+
         return JSONResponse(
             status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
         )
 
     except Exception as error:
-        base_url = str(request.base_url).rstrip("/")
-        instance = str(request.url)
-
-        error_response = {
-            "type": f"{base_url}/docs#/default/delete_user_user_delete",
-            "title": "Internal Server Error",
-            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
-            "detail": str(error),
-            "instance": instance,
-            "method": "DELETE",
-        }
         return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "type": f"{str(request.base_url).rstrip('/')}/docs#/default/delete_user_user_delete",
+                "title": "Internal Server Error",
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "detail": str(error),
+                "instance": str(request.url),
+                "method": "DELETE",
+            },
         )
 
 
