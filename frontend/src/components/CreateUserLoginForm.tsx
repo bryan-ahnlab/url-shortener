@@ -5,7 +5,7 @@ import { loginUser } from "@/actions/user";
 import { ApiErrorShape } from "@/types/error";
 import { LoginUserData } from "@/types/response";
 
-export default function UserLoginForm() {
+export default function CreateUserLoginForm() {
   /* Request State */
   const [email, setEmail] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);

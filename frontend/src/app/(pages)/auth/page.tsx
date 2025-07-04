@@ -1,11 +1,11 @@
 // src/app/shorten/page.tsx
 
-import UserLoginForm from "@/components/UserLoginForm";
+import CreateUserLoginForm from "@/components/CreateUserLoginForm";
 
 export default function ShortenPage() {
   return (
     <div className="mx-auto px-5 py-10">
-      <UserLoginForm />
+      <CreateUserLoginForm />
     </div>
   );
 }

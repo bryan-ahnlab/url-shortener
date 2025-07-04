@@ -6,7 +6,7 @@ import { ApiErrorShape } from "@/types/error";
 import { ShortenUrlData } from "@/types/response";
 import { normalizeUrl } from "@/utils/utility";
 
-export default function ShortUrlForm() {
+export default function CreateShortUrlForm() {
   /* Request State */
   const [longUrl, setLongUrl] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
