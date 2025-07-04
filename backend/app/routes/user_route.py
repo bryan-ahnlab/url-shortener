@@ -218,7 +218,23 @@ async def login_user(request: Request, payload: user_schema.LoginUserRequest):
     try:
         data = user_crud.read_user_by_email(payload.email)
 
-        if not data or not user_crud.verify_password(payload.password, data.password):
+        if not data:
+            base_url = str(request.base_url).rstrip("/")
+            instance = str(request.url)
+
+            error_response = {
+                "type": f"{base_url}/docs#/default/login_user_user_login_post",
+                "title": "Not Found",
+                "status": status.HTTP_404_NOT_FOUND,
+                "detail": "User not found.",
+                "instance": instance,
+                "method": "POST",
+            }
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND, content=error_response
+            )
+
+        if not user_crud.verify_password(payload.password, data.password):
             base_url = str(request.base_url).rstrip("/")
             instance = str(request.url)
 
