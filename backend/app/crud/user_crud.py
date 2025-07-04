@@ -45,8 +45,12 @@ def read_user_by_email(email: str):
         db.close()
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return bcrypt.verify(plain_password, hashed_password)
+def read_user(request: ReadUserRequest | UpdateUserRequest):
+    db = SessionLocal()
+    try:
+        return db.query(User).filter(User.id == request.id).first()
+    finally:
+        db.close()
 
 
 def update_user(request: UpdateUserRequest):
@@ -75,14 +79,6 @@ def update_user(request: UpdateUserRequest):
         db.close()
 
 
-def read_user_by_id(id: str):
-    db = SessionLocal()
-    try:
-        return db.query(User).filter(User.id == id).first()
-    finally:
-        db.close()
-
-
 def delete_user(id: str):
     db = SessionLocal()
     try:
@@ -99,3 +95,7 @@ def delete_user(id: str):
         raise error
     finally:
         db.close()
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.verify(plain_password, hashed_password)

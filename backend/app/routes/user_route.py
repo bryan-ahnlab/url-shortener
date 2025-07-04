@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, Depends, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
@@ -20,7 +20,7 @@ async def create_user(request: Request, payload: user_schema.CreateUserRequest):
             instance = str(request.url)
 
             error_response = {
-                "type": f"{base_url}/docs#/default/signup_signup_post",
+                "type": f"{base_url}/docs#/default/create_user_user_post",
                 "title": "Conflict",
                 "status": status.HTTP_409_CONFLICT,
                 "detail": "User already exists.",
@@ -48,12 +48,61 @@ async def create_user(request: Request, payload: user_schema.CreateUserRequest):
         instance = str(request.url)
 
         error_response = {
-            "type": f"{base_url}/docs#/default/signup_signup_post",
+            "type": f"{base_url}/docs#/default/create_user_user_post",
             "title": "Internal Server Error",
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
             "instance": instance,
             "method": "POST",
+        }
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
+        )
+
+
+@user_router.get("/user/{id}")
+async def read_user(request: Request, payload: user_schema.ReadUserRequest = Depends()):
+    try:
+        data = user_crud.read_user(payload)
+
+        if data is not None:
+            response = {
+                "status": status.HTTP_200_OK,
+                "message": "read",
+                "request": payload,
+                "response": data,
+            }
+
+            return JSONResponse(
+                status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
+            )
+
+        base_url = str(request.base_url).rstrip("/")
+        instance = str(request.url)
+
+        error_response = {
+            "type": f"{base_url}/docs#/default/read_user_user__id__get",
+            "title": "Resource Not Found",
+            "status": status.HTTP_404_NOT_FOUND,
+            "detail": f"User '{payload.id}' does not exist.",
+            "instance": instance,
+            "method": "GET",
+        }
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND, content=error_response
+        )
+
+    except Exception as error:
+        base_url = str(request.base_url).rstrip("/")
+        instance = str(request.url)
+
+        error_response = {
+            "type": f"{base_url}/docs#/default/read_user_user__id__get",
+            "title": "Internal Server Error",
+            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "detail": str(error),
+            "instance": instance,
+            "method": "GET",
         }
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response
@@ -67,12 +116,12 @@ async def create_user(request: Request, payload: user_schema.CreateUserRequest):
 )
 async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
     try:
-        if not user_crud.read_user_by_id(payload.id):
+        if not user_crud.read_user(payload):
             base_url = str(request.base_url).rstrip("/")
             instance = str(request.url)
 
             error_response = {
-                "type": f"{base_url}/docs#/default/update_update_put",
+                "type": f"{base_url}/docs#/default/update_user_user_put",
                 "title": "Not Found",
                 "status": status.HTTP_404_NOT_FOUND,
                 "detail": "User not found.",
@@ -100,7 +149,7 @@ async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
         instance = str(request.url)
 
         error_response = {
-            "type": f"{base_url}/docs#/default/update_update_put",
+            "type": f"{base_url}/docs#/default/update_user_user_put",
             "title": "Internal Server Error",
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
@@ -122,7 +171,7 @@ async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
             instance = str(request.url)
 
             error_response = {
-                "type": f"{base_url}/docs#/default/delete_delete_delete",
+                "type": f"{base_url}/docs#/default/delete_user_user_delete",
                 "title": "Not Found",
                 "status": status.HTTP_404_NOT_FOUND,
                 "detail": "User not found.",
@@ -139,14 +188,16 @@ async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
             "request": payload,
             "response": data,
         }
-        return JSONResponse(status_code=status.HTTP_200_OK, content=response)
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content=jsonable_encoder(response)
+        )
 
     except Exception as error:
         base_url = str(request.base_url).rstrip("/")
         instance = str(request.url)
 
         error_response = {
-            "type": f"{base_url}/docs#/default/delete_delete_delete",
+            "type": f"{base_url}/docs#/default/delete_user_user_delete",
             "title": "Internal Server Error",
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
@@ -159,9 +210,11 @@ async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
 
 
 @user_router.post(
-    "/login", response_class=JSONResponse, response_model=user_schema.ReadUserResponse
+    "/user/login",
+    response_class=JSONResponse,
+    response_model=user_schema.ReadUserResponse,
 )
-async def read_user(request: Request, payload: user_schema.ReadUserRequest):
+async def login_user(request: Request, payload: user_schema.LoginUserRequest):
     try:
         data = user_crud.read_user_by_email(payload.email)
 
@@ -170,7 +223,7 @@ async def read_user(request: Request, payload: user_schema.ReadUserRequest):
             instance = str(request.url)
 
             error_response = {
-                "type": f"{base_url}/docs#/default/login_login_post",
+                "type": f"{base_url}/docs#/default/login_user_user_login_post",
                 "title": "Unauthorized",
                 "status": status.HTTP_401_UNAUTHORIZED,
                 "detail": "Invalid email or password.",
@@ -196,7 +249,7 @@ async def read_user(request: Request, payload: user_schema.ReadUserRequest):
         instance = str(request.url)
 
         error_response = {
-            "type": f"{base_url}/docs#/default/login_login_post",
+            "type": f"{base_url}/docs#/default/login_user_user_login_post",
             "title": "Internal Server Error",
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),

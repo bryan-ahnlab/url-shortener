@@ -18,12 +18,12 @@ class CreateUserResponse(CreateUserRequest):
 
 
 class ReadUserRequest(BaseModel):
-    email: EmailStr
-    password: str
+    id: str
 
 
 class ReadUserResponse(ReadUserRequest):
-    id: str
+    email: EmailStr
+    password: str
     name: str
     phone: str
     address: str
@@ -54,6 +54,22 @@ class DeleteUserRequest(BaseModel):
 
 
 class DeleteUserResponse(DeleteUserRequest):
+    name: str
+    phone: str
+    address: str
+    birth: datetime.date
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+
+class LoginUserRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class LoginUserResponse(LoginUserRequest):
+    id: str
+    email: EmailStr
     name: str
     phone: str
     address: str

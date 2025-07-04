@@ -68,7 +68,7 @@ async def read_short_url(
         instance = str(request.url)
 
         error_response = {
-            "type": f"{base_url}/docs#/default/read_short_url__short_url_schema__get",
+            "type": f"{base_url}/docs#/default/read_short_url__short_url__get",
             "title": "Resource Not Found",
             "status": status.HTTP_404_NOT_FOUND,
             "detail": f"Short URL '{payload.short_url}' does not exist.",
@@ -84,7 +84,7 @@ async def read_short_url(
         instance = str(request.url)
 
         error_response = {
-            "type": f"{base_url}/docs#/default/read_short_url__short_url_schema__get",
+            "type": f"{base_url}/docs#/default/read_short_url__short_url__get",
             "title": "Internal Server Error",
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "detail": str(error),
