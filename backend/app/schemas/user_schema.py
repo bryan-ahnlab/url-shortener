@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 
@@ -34,12 +35,12 @@ class ReadUserResponse(ReadUserRequest):
 
 class UpdateUserRequest(BaseModel):
     id: str
-    email: EmailStr
-    password: str
-    name: str
-    phone: str
-    address: str
-    birth: datetime.date
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    birth: Optional[datetime.date] = None
 
 
 class UpdateUserResponse(UpdateUserRequest):

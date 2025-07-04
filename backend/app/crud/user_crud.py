@@ -61,12 +61,18 @@ def update_user(request: UpdateUserRequest):
         if not user:
             return None
 
-        user.email = request.email
-        user.password = bcrypt.hash(request.password)
-        user.name = request.name
-        user.phone = request.phone
-        user.address = request.address
-        user.birth = request.birth
+        if request.email:
+            user.email = request.email
+        if request.password:
+            user.password = bcrypt.hash(request.password)
+        if request.name:
+            user.name = request.name
+        if request.phone:
+            user.phone = request.phone
+        if request.address:
+            user.address = request.address
+        if request.birth:
+            user.birth = request.birth
 
         db.commit()
         db.refresh(user)
