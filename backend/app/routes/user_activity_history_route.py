@@ -3,9 +3,11 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 from schemas import user_activity_history_schema
-from crud import user_crud
-from crud import user_activity_history_crud
 
+from crud import user_activity_history_crud
+from crud import user_crud
+
+from typing import List
 
 user_activity_history_router = APIRouter()
 
@@ -234,34 +236,35 @@ async def delete_user_activity_history(
 @user_activity_history_router.get(
     "/user-activity-history/user/{user_id}",
     response_class=JSONResponse,
-    response_model=user_activity_history_schema.ReadUserActivityHistoryByUserIdResponse,
+    response_model=List[
+        user_activity_history_schema.ReadUserActivityHistoryByUserIdResponse
+    ],
 )
 async def read_user_activity_history_by_user_id(
     request: Request,
     payload: user_activity_history_schema.ReadUserActivityHistoryByUserIdRequest = Depends(),
 ):
     try:
-        existing_histories = (
-            user_activity_history_crud.read_user_activity_history_by_user_id(payload)
-        )
-
-        if not existing_histories:
+        existing_user = user_crud.read_user_by_user_id(payload.user_id)
+        if not existing_user:
             base_url = str(request.base_url).rstrip("/")
             instance = str(request.url)
 
-            return (
-                JSONResponse(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    content={
-                        "type": f"{base_url}/docs#/default/read_user_activity_history_user_activity_history_user__user_id__get",
-                        "title": "Not Found",
-                        "status": status.HTTP_404_NOT_FOUND,
-                        "detail": "User activity history not found.",
-                        "instance": instance,
-                        "method": "GET",
-                    },
-                ),
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={
+                    "type": f"{base_url}/docs#/default/read_user_activity_history_by_user_id_user_activity_history_user__user_id__get",
+                    "title": "Not Found",
+                    "status": status.HTTP_404_NOT_FOUND,
+                    "detail": "User not found.",
+                    "instance": instance,
+                    "method": "GET",
+                },
             )
+
+        existing_histories = (
+            user_activity_history_crud.read_user_activity_history_by_user_id(payload)
+        )
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
@@ -282,7 +285,7 @@ async def read_user_activity_history_by_user_id(
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={
-                "type": f"{base_url}/docs#/default/read_user_activity_history_user_activity_history_user__user_id__get",
+                "type": f"{base_url}/docs#/default/read_user_activity_history_by_user_id_user_activity_history_user__user_id__get",
                 "title": "Internal Server Error",
                 "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
                 "detail": str(error),

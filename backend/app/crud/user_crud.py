@@ -1,6 +1,7 @@
 from db.database import SessionLocal
 
 from models.user_model import User
+
 from schemas.user_schema import (
     CreateUserRequest,
     ReadUserRequest,
@@ -42,6 +43,14 @@ def read_user_by_email(email: EmailStr):
     db = SessionLocal()
     try:
         return db.query(User).filter(User.email == email).first()
+    finally:
+        db.close()
+
+
+def read_user_by_user_id(user_id: str):
+    db = SessionLocal()
+    try:
+        return db.query(User).filter(User.id == user_id).first()
     finally:
         db.close()
 

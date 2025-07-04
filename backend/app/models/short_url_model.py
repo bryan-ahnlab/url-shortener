@@ -1,7 +1,7 @@
-from typing import Optional
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, DateTime, func
 from db.database import Base
+from sqlalchemy import String, DateTime, func
+from sqlalchemy.orm import Mapped, mapped_column
+from typing import Optional
 import uuid
 import datetime
 

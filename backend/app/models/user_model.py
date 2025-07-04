@@ -1,8 +1,8 @@
+from db.database import Base
+from sqlalchemy import String, DateTime, func
+from sqlalchemy.orm import Mapped, mapped_column
 import uuid
 import datetime
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, DateTime, func
-from db.database import Base
 
 
 class User(Base):

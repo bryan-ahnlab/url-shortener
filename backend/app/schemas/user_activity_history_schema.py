@@ -1,6 +1,7 @@
-import datetime
+from pydantic import BaseModel
+
 from typing import Optional
-from pydantic import BaseModel, EmailStr
+import datetime
 
 
 class CreateUserActivityHistoryRequest(BaseModel):

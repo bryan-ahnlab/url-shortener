@@ -1,6 +1,7 @@
 from db.database import SessionLocal
 
 from models.short_url_model import ShortUrl
+
 from schemas.short_url_schema import CreateShortUrlRequest, ReadShortUrlRequest
 
 from utils.base62 import shorten_uuid

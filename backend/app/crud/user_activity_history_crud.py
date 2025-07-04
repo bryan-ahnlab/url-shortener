@@ -1,6 +1,7 @@
 from db.database import SessionLocal
 
 from models.user_activity_history_model import UserActivityHistory
+
 from schemas.user_activity_history_schema import (
     CreateUserActivityHistoryRequest,
     ReadUserActivityHistoryRequest,

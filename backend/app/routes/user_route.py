@@ -3,9 +3,8 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 from schemas import user_schema
-from schemas.user_activity_history_schema import (
-    CreateUserActivityHistoryRequest,
-)
+from schemas import user_activity_history_schema
+
 from crud import user_crud
 from crud import user_activity_history_crud
 
@@ -44,7 +43,7 @@ async def create_user(request: Request, payload: user_schema.CreateUserRequest):
         location = request.headers.get("X-Geo-Location")
 
         user_activity_history_crud.create_user_activity_history(
-            request=CreateUserActivityHistoryRequest(
+            request=user_activity_history_schema.CreateUserActivityHistoryRequest(
                 user_id=user.id,
                 activity_type="CREATE",
                 description="User created",
@@ -114,7 +113,7 @@ async def read_user(request: Request, payload: user_schema.ReadUserRequest = Dep
         location = request.headers.get("X-Geo-Location")
 
         user_activity_history_crud.create_user_activity_history(
-            request=CreateUserActivityHistoryRequest(
+            request=user_activity_history_schema.CreateUserActivityHistoryRequest(
                 user_id=existing_user.id,
                 activity_type="READ",
                 description="User read",
@@ -184,7 +183,7 @@ async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
         location = request.headers.get("X-Geo-Location")
 
         user_activity_history_crud.create_user_activity_history(
-            request=CreateUserActivityHistoryRequest(
+            request=user_activity_history_schema.CreateUserActivityHistoryRequest(
                 user_id=existing_user.id,
                 activity_type="UPDATE",
                 description="User updated",
@@ -289,7 +288,7 @@ async def delete_user(
         location = request.headers.get("X-Geo-Location")
 
         user_activity_history_crud.create_user_activity_history(
-            request=CreateUserActivityHistoryRequest(
+            request=user_activity_history_schema.CreateUserActivityHistoryRequest(
                 user_id=existing_user.id,
                 activity_type="DELETE",
                 description="User deleted",
@@ -375,7 +374,7 @@ async def login_user(request: Request, payload: user_schema.LoginUserRequest):
         location = request.headers.get("X-Geo-Location")
 
         user_activity_history_crud.create_user_activity_history(
-            request=CreateUserActivityHistoryRequest(
+            request=user_activity_history_schema.CreateUserActivityHistoryRequest(
                 user_id=existing_user.id,
                 activity_type="LOGIN",
                 description="User logged in",

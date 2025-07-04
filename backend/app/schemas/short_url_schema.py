@@ -1,6 +1,7 @@
-import datetime
-from typing import Optional
 from pydantic import BaseModel
+
+from typing import Optional
+import datetime
 
 
 class CreateShortUrlRequest(BaseModel):

@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.encoders import jsonable_encoder
 
 from schemas import short_url_schema
+
 from crud import short_url_crud
 
 short_url_router = APIRouter()
