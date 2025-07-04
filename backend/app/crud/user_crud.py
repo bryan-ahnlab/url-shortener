@@ -1,4 +1,3 @@
-from pydantic import EmailStr
 from db.database import SessionLocal
 
 from models.user_model import User
@@ -9,6 +8,7 @@ from schemas.user_schema import (
     DeleteUserRequest,
 )
 
+from pydantic import EmailStr
 from passlib.hash import bcrypt
 
 

@@ -9,6 +9,7 @@ from core.setting import settings
 from db.database import Base, createDatabaseEngine, dropDatabaseEngine
 
 from routes.user_route import user_router
+from routes.user_activity_history_route import user_activity_history_router
 from routes.short_url_route import short_url_router
 
 
@@ -50,6 +51,7 @@ app.add_middleware(
 
 # 라우터 등록
 app.include_router(user_router)
+app.include_router(user_activity_history_router)
 app.include_router(short_url_router)
 
 

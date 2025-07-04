@@ -3,8 +3,12 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 from schemas import user_schema
+from schemas.user_activity_history_schema import (
+    CreateUserActivityHistoryRequest,
+)
 from crud import user_crud
 from crud import user_activity_history_crud
+
 
 user_router = APIRouter()
 
@@ -40,13 +44,14 @@ async def create_user(request: Request, payload: user_schema.CreateUserRequest):
         location = request.headers.get("X-Geo-Location")
 
         user_activity_history_crud.create_user_activity_history(
-            user_id=user.id,
-            email=user.email,
-            activity_type="CREATE",
-            description="User created",
-            ip_address=client_ip,
-            user_agent=user_agent,
-            location=location,
+            request=CreateUserActivityHistoryRequest(
+                user_id=user.id,
+                activity_type="CREATE",
+                description="User created",
+                ip_address=client_ip,
+                user_agent=user_agent,
+                location=location,
+            ),
         )
 
         return JSONResponse(
@@ -78,7 +83,11 @@ async def create_user(request: Request, payload: user_schema.CreateUserRequest):
         )
 
 
-@user_router.get("/user/{id}")
+@user_router.get(
+    "/user/{id}",
+    response_class=JSONResponse,
+    response_model=user_schema.ReadUserResponse,
+)
 async def read_user(request: Request, payload: user_schema.ReadUserRequest = Depends()):
     try:
         existing_user = user_crud.read_user(payload)
@@ -105,13 +114,14 @@ async def read_user(request: Request, payload: user_schema.ReadUserRequest = Dep
         location = request.headers.get("X-Geo-Location")
 
         user_activity_history_crud.create_user_activity_history(
-            user_id=existing_user.id,
-            email=existing_user.email,
-            activity_type="READ",
-            description="User read",
-            ip_address=client_ip,
-            user_agent=user_agent,
-            location=location,
+            request=CreateUserActivityHistoryRequest(
+                user_id=existing_user.id,
+                activity_type="READ",
+                description="User read",
+                ip_address=client_ip,
+                user_agent=user_agent,
+                location=location,
+            ),
         )
 
         return JSONResponse(
@@ -161,7 +171,7 @@ async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
                     "status": status.HTTP_404_NOT_FOUND,
                     "detail": "User not found.",
                     "instance": instance,
-                    "method": "GET",
+                    "method": "PUT",
                 },
             )
 
@@ -174,13 +184,14 @@ async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
         location = request.headers.get("X-Geo-Location")
 
         user_activity_history_crud.create_user_activity_history(
-            user_id=existing_user.id,
-            email=existing_user.email,
-            activity_type="UPDATE",
-            description="User updated",
-            ip_address=client_ip,
-            user_agent=user_agent,
-            location=location,
+            request=CreateUserActivityHistoryRequest(
+                user_id=existing_user.id,
+                activity_type="UPDATE",
+                description="User updated",
+                ip_address=client_ip,
+                user_agent=user_agent,
+                location=location,
+            ),
         )
 
         return JSONResponse(
@@ -275,13 +286,14 @@ async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
         location = request.headers.get("X-Geo-Location")
 
         user_activity_history_crud.create_user_activity_history(
-            user_id=existing_user.id,
-            email=existing_user.email,
-            activity_type="DELETE",
-            description="User deleted",
-            ip_address=client_ip,
-            user_agent=user_agent,
-            location=location,
+            request=CreateUserActivityHistoryRequest(
+                user_id=existing_user.id,
+                activity_type="DELETE",
+                description="User deleted",
+                ip_address=client_ip,
+                user_agent=user_agent,
+                location=location,
+            ),
         )
 
         return JSONResponse(
@@ -316,7 +328,7 @@ async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
 @user_router.post(
     "/user/login",
     response_class=JSONResponse,
-    response_model=user_schema.ReadUserResponse,
+    response_model=user_schema.LoginUserResponse,
 )
 async def login_user(request: Request, payload: user_schema.LoginUserRequest):
     try:
@@ -360,13 +372,14 @@ async def login_user(request: Request, payload: user_schema.LoginUserRequest):
         location = request.headers.get("X-Geo-Location")
 
         user_activity_history_crud.create_user_activity_history(
-            user_id=existing_user.id,
-            email=existing_user.email,
-            activity_type="LOGIN",
-            description="User logged in",
-            ip_address=client_ip,
-            user_agent=user_agent,
-            location=location,
+            request=CreateUserActivityHistoryRequest(
+                user_id=existing_user.id,
+                activity_type="LOGIN",
+                description="User logged in",
+                ip_address=client_ip,
+                user_agent=user_agent,
+                location=location,
+            ),
         )
 
         return JSONResponse(
