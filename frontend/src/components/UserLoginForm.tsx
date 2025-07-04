@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { loginUser } from "@/actions/user";
-import { ApiError } from "@/types/error";
+import { ApiErrorShape } from "@/types/error";
 import { LoginUserData } from "@/types/response";
 
 export default function UserLoginForm() {
@@ -20,7 +20,7 @@ export default function UserLoginForm() {
   const [data, setData] = useState<LoginUserData | null>(null);
 
   /* Response Error State */
-  const [error, setError] = useState<ApiError | null>(null);
+  const [error, setError] = useState<ApiErrorShape | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -125,11 +125,37 @@ export default function UserLoginForm() {
             {data.response.id}
           </p>
           <p>
-            <strong>Description:&nbsp;</strong>
-            {data.response.description || "-"}
+            <strong>Email:&nbsp;</strong>
+            {data.response.email}
           </p>
           <p>
-            <strong>Long URL:&nbsp;</strong>
+            <strong>Password:&nbsp;</strong>
+            {data.response.password}
+          </p>
+          <p>
+            <strong>Name:&nbsp;</strong>
+            {data.response.name}
+          </p>
+          <p>
+            <strong>Phone:&nbsp;</strong>
+            {data.response.phone}
+          </p>
+
+          <p>
+            <strong>Address:&nbsp;</strong>
+            {data.response.address}
+          </p>
+          <p>
+            <strong>Birth:&nbsp;</strong>
+            {data.response.birth}
+          </p>
+          <p>
+            <strong>Created At:&nbsp;</strong>
+            {data.response.created_at}
+          </p>
+          <p>
+            <strong>Updated At:&nbsp;</strong>
+            {data.response.updated_at}
           </p>
         </div>
       )}
