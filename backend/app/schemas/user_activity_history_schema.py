@@ -36,7 +36,6 @@ class ReadUserActivityHistoryResponse(ReadUserActivityHistoryRequest):
 class UpdateUserActivityHistoryRequest(BaseModel):
     id: str
     user_id: Optional[str] = None
-    email: Optional[EmailStr] = None
     activity_type: Optional[str] = None
     description: Optional[str] = None
     ip_address: Optional[str] = None
