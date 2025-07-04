@@ -5,6 +5,8 @@ import { loginUser } from "@/actions/user";
 import { ApiErrorShape } from "@/types/error";
 import { LoginUserData } from "@/types/response";
 
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+
 export default function CreateUserLoginForm() {
   /* Request State */
   const [email, setEmail] = useState<string | null>(null);
@@ -21,6 +23,9 @@ export default function CreateUserLoginForm() {
 
   /* Response Error State */
   const [error, setError] = useState<ApiErrorShape | null>(null);
+
+  /* Password Visibility State */
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -90,16 +95,33 @@ export default function CreateUserLoginForm() {
         <label className="text-sm text-white" htmlFor="password">
           Password:
         </label>
-        <input
-          className={`w-full bg-black/20 border ${
-            inputPasswordError ? "border-red-500" : "border-white/20"
-          } rounded px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white/10`}
-          type="password"
-          id="password"
-          placeholder="비밀번호를 입력하세요"
-          value={password || ""}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+
+        <div className="relative w-full">
+          <input
+            className={`w-full bg-black/20 border ${
+              inputPasswordError ? "border-red-500" : "border-white/20"
+            } rounded px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white/10 pr-10`}
+            type={showPassword ? "text" : "password"}
+            id="password"
+            placeholder="비밀번호를 입력하세요"
+            value={password || ""}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          {/* 아이콘 버튼 */}
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute inset-y-0 right-2 flex items-center text-white/60 hover:text-white cursor-pointer"
+          >
+            {showPassword ? (
+              <EyeSlashIcon className="w-5 h-5" />
+            ) : (
+              <EyeIcon className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+
         {/* Password 에러 메시지 */}
         {inputPasswordError && (
           <p className="text-red-400 text-sm">{inputPasswordError}</p>
