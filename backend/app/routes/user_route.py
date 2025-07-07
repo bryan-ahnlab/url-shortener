@@ -42,6 +42,7 @@ async def create_user(request: Request, payload: user_schema.CreateUserRequest):
         user_agent = request.headers.get("User-Agent")
         location = request.headers.get("X-Geo-Location")
 
+        """  """
         user_activity_history_crud.create_user_activity_history(
             request=user_activity_history_schema.CreateUserActivityHistoryRequest(
                 user_id=user.id,
@@ -52,6 +53,7 @@ async def create_user(request: Request, payload: user_schema.CreateUserRequest):
                 location=location,
             ),
         )
+        """  """
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
@@ -112,6 +114,7 @@ async def read_user(request: Request, payload: user_schema.ReadUserRequest = Dep
         user_agent = request.headers.get("User-Agent")
         location = request.headers.get("X-Geo-Location")
 
+        """  """
         user_activity_history_crud.create_user_activity_history(
             request=user_activity_history_schema.CreateUserActivityHistoryRequest(
                 user_id=existing_user.id,
@@ -122,6 +125,7 @@ async def read_user(request: Request, payload: user_schema.ReadUserRequest = Dep
                 location=location,
             ),
         )
+        """  """
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
@@ -182,6 +186,7 @@ async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
         user_agent = request.headers.get("User-Agent")
         location = request.headers.get("X-Geo-Location")
 
+        """  """
         user_activity_history_crud.create_user_activity_history(
             request=user_activity_history_schema.CreateUserActivityHistoryRequest(
                 user_id=existing_user.id,
@@ -192,6 +197,7 @@ async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
                 location=location,
             ),
         )
+        """  """
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
@@ -225,10 +231,7 @@ async def update_user(request: Request, payload: user_schema.UpdateUserRequest):
 @user_router.delete(
     "/user", response_class=JSONResponse, response_model=user_schema.DeleteUserResponse
 )
-async def delete_user(
-    request: Request,
-    payload: user_schema.DeleteUserRequest = Depends(),
-):
+async def delete_user(request: Request, payload: user_schema.DeleteUserRequest):
     try:
         existing_user = user_crud.read_user(payload)
         if not existing_user:
@@ -252,11 +255,11 @@ async def delete_user(
             instance = str(request.url)
 
             return JSONResponse(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_404_NOT_FOUND,
                 content={
                     "type": f"{base_url}/docs#/default/delete_user_user_delete",
                     "title": "Bad Request",
-                    "status": status.HTTP_400_BAD_REQUEST,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "detail": "Email does not match.",
                     "instance": instance,
                     "method": "DELETE",
@@ -287,6 +290,7 @@ async def delete_user(
         user_agent = request.headers.get("User-Agent")
         location = request.headers.get("X-Geo-Location")
 
+        """  """
         user_activity_history_crud.create_user_activity_history(
             request=user_activity_history_schema.CreateUserActivityHistoryRequest(
                 user_id=existing_user.id,
@@ -297,6 +301,7 @@ async def delete_user(
                 location=location,
             ),
         )
+        """  """
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
@@ -373,6 +378,7 @@ async def login_user(request: Request, payload: user_schema.LoginUserRequest):
         user_agent = request.headers.get("User-Agent")
         location = request.headers.get("X-Geo-Location")
 
+        """  """
         user_activity_history_crud.create_user_activity_history(
             request=user_activity_history_schema.CreateUserActivityHistoryRequest(
                 user_id=existing_user.id,
@@ -383,6 +389,7 @@ async def login_user(request: Request, payload: user_schema.LoginUserRequest):
                 location=location,
             ),
         )
+        """  """
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
