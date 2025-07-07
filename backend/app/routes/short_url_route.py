@@ -3,8 +3,10 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.encoders import jsonable_encoder
 
 from schemas import short_url_schema
+from schemas import user_activity_history_schema
 
 from crud import short_url_crud
+from crud import user_activity_history_crud
 
 short_url_router = APIRouter()
 
@@ -22,6 +24,25 @@ async def create_short_url(
         # raise Exception("Test error")
 
         data = short_url_crud.create_short_url(payload)
+
+        client_ip = request.headers.get("X-Forwarded-For") or (
+            request.client.host if request.client else None
+        )
+        user_agent = request.headers.get("User-Agent")
+        location = request.headers.get("X-Geo-Location")
+
+        """  """
+        user_activity_history_crud.create_user_activity_history(
+            request=user_activity_history_schema.CreateUserActivityHistoryRequest(
+                user_id=data.user_id,
+                activity_type="CREATE",
+                description="Short URL created",
+                ip_address=client_ip,
+                user_agent=user_agent,
+                location=location,
+            ),
+        )
+        """  """
 
     except Exception as error:
         base_url = str(request.base_url).rstrip("/")

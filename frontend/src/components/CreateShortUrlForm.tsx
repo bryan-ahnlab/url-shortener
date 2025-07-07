@@ -35,8 +35,20 @@ export default function CreateShortUrlForm() {
       setInputLongUrlError(null);
     }
 
+    let location = "";
+    try {
+      const geo = await new Promise<GeolocationPosition>((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+      );
+      location = `${geo.coords.latitude},${geo.coords.longitude}`;
+    } catch (err) {
+      console.log("위치 정보를 가져올 수 없습니다.", err);
+    }
+
     const formData = new FormData(event.currentTarget);
     formData.append("long_url", longUrl);
+
+    formData.append("location", location);
 
     const apiResponse = await createShortUrl(formData);
 

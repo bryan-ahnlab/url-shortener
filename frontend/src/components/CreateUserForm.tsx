@@ -94,6 +94,16 @@ export default function CreateUserForm() {
       setInputBirthError(null);
     }
 
+    let location = "";
+    try {
+      const geo = await new Promise<GeolocationPosition>((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+      );
+      location = `${geo.coords.latitude},${geo.coords.longitude}`;
+    } catch (err) {
+      console.log("위치 정보를 가져올 수 없습니다.", err);
+    }
+
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
@@ -101,6 +111,8 @@ export default function CreateUserForm() {
     formData.append("phone", phone);
     formData.append("address", address);
     formData.append("birth", birth);
+
+    formData.append("location", location);
 
     const apiResponse = await createUser(formData);
     console.log(apiResponse);

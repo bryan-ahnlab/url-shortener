@@ -14,10 +14,15 @@ export async function createUser(
   formData: FormData
 ): Promise<ApiResult<CreateUserData>> {
   const formObject = Object.fromEntries(formData.entries());
+  const location =
+    typeof formObject.location === "string" ? formObject.location : "";
 
   const response = await fetch(`${process.env.BASE_URL}/api/user`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-Geo-Location": location,
+    },
     body: JSON.stringify(formObject),
   });
 
@@ -28,10 +33,12 @@ export async function updateUser(
   formData: FormData
 ): Promise<ApiResult<UpdateUserData>> {
   const formObject = Object.fromEntries(formData.entries());
+  const location =
+    typeof formObject.location === "string" ? formObject.location : "";
 
   const response = await fetch(`${process.env.BASE_URL}/api/user`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "X-Geo-Location": location },
     body: JSON.stringify(formObject),
   });
 
@@ -42,10 +49,15 @@ export async function deleteUser(
   formData: FormData
 ): Promise<ApiResult<DeleteUserData>> {
   const formObject = Object.fromEntries(formData.entries());
+  const location =
+    typeof formObject.location === "string" ? formObject.location : "";
 
   const response = await fetch(`${process.env.BASE_URL}/api/user`, {
     method: "DELETE",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-Geo-Location": location,
+    },
     body: JSON.stringify(formObject),
   });
 
@@ -56,10 +68,12 @@ export async function readUser(
   formData: FormData
 ): Promise<ApiResult<ReadUserData>> {
   const formObject = Object.fromEntries(formData.entries());
+  const location =
+    typeof formObject.location === "string" ? formObject.location : "";
 
   const response = await fetch(`${process.env.BASE_URL}/api/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "X-Geo-Location": location },
     body: JSON.stringify(formObject),
   });
 
@@ -70,10 +84,12 @@ export async function createUserLogin(
   formData: FormData
 ): Promise<ApiResult<LoginUserData>> {
   const formObject = Object.fromEntries(formData.entries());
+  const location =
+    typeof formObject.location === "string" ? formObject.location : "";
 
   const response = await fetch(`${process.env.BASE_URL}/api/user/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "X-Geo-Location": location },
     body: JSON.stringify(formObject),
   });
 

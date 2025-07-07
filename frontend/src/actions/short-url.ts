@@ -7,10 +7,15 @@ export async function createShortUrl(
   formData: FormData
 ): Promise<ApiResult<ShortenUrlData>> {
   const formObject = Object.fromEntries(formData.entries());
+  const location =
+    typeof formObject.location === "string" ? formObject.location : "";
 
   const response = await fetch(`${process.env.BASE_URL}/api/short-url`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-Geo-Location": location,
+    },
     body: JSON.stringify(formObject),
   });
 
