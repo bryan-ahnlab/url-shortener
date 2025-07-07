@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+
 import { createShortUrl } from "@/actions/short-url";
 import { ApiErrorShape } from "@/types/error";
 import { ShortenUrlData } from "@/types/response";
+
 import { normalizeUrl } from "@/utils/utility";
 
 export default function CreateShortUrlForm() {
@@ -145,10 +147,21 @@ export default function CreateShortUrlForm() {
             <strong>Title:&nbsp;</strong>
             {error.title}
           </p>
-          <p>
-            <strong>Detail:&nbsp;</strong>
-            {error.detail}
-          </p>
+          {Array.isArray(error.detail) ? (
+            <p>
+              <strong>Detail:&nbsp;</strong>
+              {error.detail.map((err, idx) => (
+                <div key={idx}>
+                  • {err.loc?.join(".")} - {err.msg}
+                </div>
+              ))}
+            </p>
+          ) : (
+            <p>
+              <strong>Detail:&nbsp;</strong>
+              {error.detail}
+            </p>
+          )}
           <p>
             <strong>Status:&nbsp;</strong>
             {error.status}
