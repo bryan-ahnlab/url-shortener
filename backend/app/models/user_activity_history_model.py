@@ -11,7 +11,7 @@ class UserActivityHistory(Base):
     id: Mapped[str] = mapped_column(
         String(32), primary_key=True, default=lambda: uuid.uuid4().hex, unique=True
     )
-    user_id: Mapped[str] = mapped_column(String(32), index=True)
+    user_id: Mapped[str] = mapped_column(String(32), index=True, nullable=True)
     activity_type: Mapped[str] = mapped_column(
         String(50), nullable=True
     )  # LOGIN, UPDATE, DELETE 등

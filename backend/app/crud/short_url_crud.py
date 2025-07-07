@@ -21,6 +21,7 @@ def create_short_url(request: CreateShortUrlRequest):
         data = ShortUrl(
             long_url=request.long_url,
             description=request.description,
+            user_id=request.user_id,
             short_url=short_url,
         )
         db.add(data)

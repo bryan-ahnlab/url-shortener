@@ -20,11 +20,13 @@ export interface ShortenUrlData {
   status: number;
   message: string;
   request: {
+    user_id: string | null;
     long_url: string;
     description: string | null;
   };
   response: {
     id: string;
+    user_id: string | null;
     long_url: string;
     description: string | null;
     short_url: string;

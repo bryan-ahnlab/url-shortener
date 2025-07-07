@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useAppDispatch } from "@/store/hooks";
+import { startLoading, stopLoading } from "@/store/loadingSlice";
+import { openModal } from "@/store/modalSlice";
 
 import { createUserLogin } from "@/actions/user";
 import { ApiErrorShape } from "@/types/error";
@@ -11,6 +14,8 @@ import Link from "next/link";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 export default function CreateUserLoginForm() {
+  const dispatch = useAppDispatch();
+
   /* Request State */
   const [email, setEmail] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
@@ -58,7 +63,7 @@ export default function CreateUserLoginForm() {
     } catch (err) {
       console.log("위치 정보를 가져올 수 없습니다.", err);
     }
-
+    dispatch(startLoading());
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
@@ -66,9 +71,23 @@ export default function CreateUserLoginForm() {
     formData.append("location", location);
 
     const apiResponse = await createUserLogin(formData);
+    dispatch(stopLoading());
+
     console.log(apiResponse);
 
     if (apiResponse.ok) {
+      dispatch(
+        openModal({
+          title: "로그인 성공",
+          contents: [
+            "ID: " + apiResponse.data.response.id,
+            "Email: " + apiResponse.data.response.email,
+            "Password: " + apiResponse.data.response.password,
+            "Name: " + apiResponse.data.response.name,
+            "Phone: " + apiResponse.data.response.phone,
+          ],
+        })
+      );
       setData(apiResponse.data);
       setError(null);
     } else {

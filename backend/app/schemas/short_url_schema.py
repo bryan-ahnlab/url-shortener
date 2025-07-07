@@ -5,6 +5,7 @@ import datetime
 
 
 class CreateShortUrlRequest(BaseModel):
+    user_id: Optional[str] = None
     long_url: str
     description: Optional[str] = None
 

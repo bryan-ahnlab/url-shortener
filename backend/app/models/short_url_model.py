@@ -15,6 +15,7 @@ class ShortUrl(Base):
         default=lambda: uuid.uuid4().hex,
         unique=True,
     )
+    user_id: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
     long_url: Mapped[str] = mapped_column(String(2048))
     short_url: Mapped[str] = mapped_column(String(16), unique=True, index=True)
     description: Mapped[Optional[str]] = mapped_column(String(255))

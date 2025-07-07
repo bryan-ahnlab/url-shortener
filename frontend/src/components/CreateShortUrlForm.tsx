@@ -45,12 +45,16 @@ export default function CreateShortUrlForm() {
       console.log("위치 정보를 가져올 수 없습니다.", err);
     }
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData();
+    formData.append("user_id", "None");
     formData.append("long_url", longUrl);
+    formData.append("description", description || "");
 
     formData.append("location", location);
 
     const apiResponse = await createShortUrl(formData);
+
+    console.log(apiResponse);
 
     if (apiResponse.ok) {
       setData(apiResponse.data);
@@ -122,6 +126,10 @@ export default function CreateShortUrlForm() {
           <p>
             <strong>ID:&nbsp;</strong>
             {data.response.id}
+          </p>
+          <p>
+            <strong>User ID:&nbsp;</strong>
+            {data.response.user_id || "-"}
           </p>
           <p>
             <strong>Description:&nbsp;</strong>

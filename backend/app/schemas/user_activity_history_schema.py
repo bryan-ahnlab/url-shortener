@@ -5,7 +5,7 @@ import datetime
 
 
 class CreateUserActivityHistoryRequest(BaseModel):
-    user_id: str
+    user_id: Optional[str] = None
     activity_type: Optional[str] = None
     description: Optional[str] = None
     ip_address: Optional[str] = None
@@ -24,7 +24,7 @@ class ReadUserActivityHistoryRequest(BaseModel):
 
 
 class ReadUserActivityHistoryResponse(ReadUserActivityHistoryRequest):
-    user_id: str
+    user_id: Optional[str] = None
     activity_type: str
     description: str
     ip_address: str
@@ -54,7 +54,7 @@ class DeleteUserActivityHistoryRequest(BaseModel):
 
 
 class DeleteUserActivityHistoryResponse(DeleteUserActivityHistoryRequest):
-    user_id: str
+    user_id: Optional[str] = None
     activity_type: str
     description: str
     ip_address: str
@@ -69,7 +69,7 @@ class ReadUserActivityHistoryByUserIdRequest(BaseModel):
 
 
 class ReadUserActivityHistoryByUserIdResponse(ReadUserActivityHistoryByUserIdRequest):
-    user_id: str
+    user_id: Optional[str] = None
     activity_type: str
     description: str
     ip_address: str
