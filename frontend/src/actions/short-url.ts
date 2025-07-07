@@ -14,9 +14,5 @@ export async function createShortUrl(
     body: JSON.stringify(formObject),
   });
 
-  const data = await safeParseJson(response);
-
-  console.log(`createShortUrl`, data);
-
-  return data;
+  return await safeParseJson(response);
 }

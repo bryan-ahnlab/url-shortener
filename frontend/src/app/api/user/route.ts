@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
             title: data?.title || "Error",
             status: apiResponse.status,
             detail: data?.detail || "Unexpected error",
-            instance: data?.instance || "",
+            instance: data?.instance || request.nextUrl.href || "",
             method: "POST",
           },
         },

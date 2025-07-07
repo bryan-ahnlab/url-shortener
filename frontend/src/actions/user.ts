@@ -66,7 +66,7 @@ export async function readUser(
   return await safeParseJson(response);
 }
 
-export async function loginUser(
+export async function createUserLogin(
   formData: FormData
 ): Promise<ApiResult<LoginUserData>> {
   const formObject = Object.fromEntries(formData.entries());

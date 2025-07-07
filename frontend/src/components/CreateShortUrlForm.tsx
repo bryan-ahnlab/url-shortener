@@ -52,9 +52,7 @@ export default function CreateShortUrlForm() {
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 p-6 border border-white/10 rounded-xl shadow-xl backdrop-blur-lg bg-white/5 w-full min-w-[360px]"
     >
-      <h2 className="text-lg font-semibold text-white text-center">
-        Enter URL
-      </h2>
+      <h2 className="text-lg font-semibold text-white">Enter URL</h2>
 
       {/* Long URL 입력 */}
       <div className="flex flex-col gap-2.5 w-full">
@@ -96,7 +94,7 @@ export default function CreateShortUrlForm() {
       {/* 공백 */}
       <div className="h-4"></div>
 
-      {/* 제출 버튼 */}
+      {/* 버튼 */}
       <button
         type="submit"
         className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200"

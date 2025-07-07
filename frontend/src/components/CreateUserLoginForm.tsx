@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { loginUser } from "@/actions/user";
+
+import { createUserLogin } from "@/actions/user";
 import { ApiErrorShape } from "@/types/error";
 import { LoginUserData } from "@/types/response";
 
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
+
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 export default function CreateUserLoginForm() {
   /* Request State */
@@ -51,7 +53,7 @@ export default function CreateUserLoginForm() {
     formData.append("email", email);
     formData.append("password", password);
 
-    const apiResponse = await loginUser(formData);
+    const apiResponse = await createUserLogin(formData);
     console.log(apiResponse);
 
     if (apiResponse.ok) {
@@ -68,7 +70,9 @@ export default function CreateUserLoginForm() {
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 p-6 border border-white/10 rounded-xl shadow-xl backdrop-blur-lg bg-white/5 w-full min-w-[360px]"
     >
-      <h2 className="text-lg font-semibold text-white text-center">Login</h2>
+      <div className="flex items-center gap-2">
+        <h2 className="text-lg font-semibold text-white">로그인</h2>
+      </div>
 
       {/* Email 입력 */}
       <div className="flex flex-col gap-2.5 w-full">
@@ -76,10 +80,10 @@ export default function CreateUserLoginForm() {
           Email:
         </label>
         <input
+          type="email"
           className={`w-full bg-black/20 border ${
             inputEmailError ? "border-red-500" : "border-white/20"
           } rounded px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white/10`}
-          type="email"
           id="email"
           placeholder="이메일을 입력하세요"
           value={email || ""}
@@ -96,19 +100,17 @@ export default function CreateUserLoginForm() {
         <label className="text-sm text-white" htmlFor="password">
           Password:
         </label>
-
         <div className="relative w-full">
           <input
+            type={showPassword ? "text" : "password"}
             className={`w-full bg-black/20 border ${
               inputPasswordError ? "border-red-500" : "border-white/20"
             } rounded px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white/10 pr-10`}
-            type={showPassword ? "text" : "password"}
             id="password"
             placeholder="비밀번호를 입력하세요"
             value={password || ""}
             onChange={(e) => setPassword(e.target.value)}
           />
-
           {/* 아이콘 버튼 */}
           <button
             type="button"
@@ -122,7 +124,6 @@ export default function CreateUserLoginForm() {
             )}
           </button>
         </div>
-
         {/* Password 에러 메시지 */}
         {inputPasswordError && (
           <p className="text-red-400 text-sm">{inputPasswordError}</p>
@@ -132,33 +133,34 @@ export default function CreateUserLoginForm() {
       {/* 공백 */}
       <div className="h-4"></div>
 
+      {/* 버튼 */}
       <div className="flex flex-row gap-2">
         <Link
           href="/user/create"
-          className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center"
+          className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center flex items-center justify-center"
         >
-          Create
+          회원 가입
         </Link>
         <Link
           href="/user/update"
-          className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center"
+          className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center flex items-center justify-center"
         >
-          Update
+          회원 수정
         </Link>
         <Link
           href="/user/delete"
-          className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center"
+          className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center flex items-center justify-center"
         >
-          Delete
+          회원 탈퇴
         </Link>
       </div>
 
-      {/* 로그인 버튼 */}
+      {/* 버튼 */}
       <button
         type="submit"
         className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200"
       >
-        Login
+        로그인
       </button>
 
       {/* 결과 표시 */}
@@ -211,10 +213,21 @@ export default function CreateUserLoginForm() {
             <strong>Title:&nbsp;</strong>
             {error.title}
           </p>
-          <p>
-            <strong>Detail:&nbsp;</strong>
-            {error.detail}
-          </p>
+          {Array.isArray(error.detail) ? (
+            <p>
+              <strong>Detail:&nbsp;</strong>
+              {error.detail.map((err, idx) => (
+                <div key={idx}>
+                  • {err.loc?.join(".")} - {err.msg}
+                </div>
+              ))}
+            </p>
+          ) : (
+            <p>
+              <strong>Detail:&nbsp;</strong>
+              {error.detail}
+            </p>
+          )}
           <p>
             <strong>Status:&nbsp;</strong>
             {error.status}
