@@ -6,9 +6,18 @@ export default function ShortenLayout({
   return (
     <div className="flex flex-col h-screen justify-center items-center bg-black text-white relative overflow-hidden">
       {/* 신호등 조명 */}
-      <div className="absolute top-24 left-24 w-72 h-72 bg-red-700 opacity-25 rounded-full blur-2xl z-0 animate-pulse"></div>
-      <div className="absolute top-40 right-20 w-48 h-48 bg-yellow-500 opacity-20 rounded-full blur-2xl z-0 animate-pulse"></div>
-      <div className="absolute bottom-32 left-36 w-64 h-64 bg-green-500 opacity-20 rounded-full blur-2xl z-0 animate-pulse"></div>
+      <div
+        className="absolute top-24 left-24 w-72 h-72 bg-red-700 opacity-25 rounded-full blur-2xl z-0 animate-pulse"
+        style={{ animationDuration: "2s" }}
+      ></div>
+      <div
+        className="absolute top-40 right-20 w-48 h-48 bg-yellow-500 opacity-20 rounded-full blur-2xl z-0 animate-pulse"
+        style={{ animationDuration: "1.5s" }}
+      ></div>
+      <div
+        className="absolute bottom-32 left-36 w-64 h-64 bg-green-500 opacity-20 rounded-full blur-2xl z-0 animate-pulse"
+        style={{ animationDuration: "3s" }}
+      ></div>
 
       {/* 빗방울 효과 */}
       <div className="absolute inset-0 z-0 pointer-events-none rain-container">
