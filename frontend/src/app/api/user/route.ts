@@ -3,12 +3,16 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
+    const location = request.headers.get("x-geo-location") || "";
 
     const apiResponse = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/user`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Geo-Location": location,
+        },
         body: JSON.stringify(requestBody),
       }
     );
@@ -58,12 +62,16 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const requestBody = await request.json();
+    const location = request.headers.get("x-geo-location") || "";
 
     const apiResponse = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/user`,
       {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Geo-Location": location,
+        },
         body: JSON.stringify(requestBody),
       }
     );
@@ -113,12 +121,16 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const requestBody = await request.json();
+    const location = request.headers.get("x-geo-location") || "";
 
     const apiResponse = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/user`,
       {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Geo-Location": location,
+        },
         body: JSON.stringify(requestBody),
       }
     );
