@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
+import { ROUTES } from "@/constants/routes";
+
 export default async function Home() {
   /* Error test for error.tsx */
   /* throw new Error(""); */
@@ -10,7 +12,7 @@ export default async function Home() {
 
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  redirect("/user");
+  redirect(ROUTES.USER.LOGIN);
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">

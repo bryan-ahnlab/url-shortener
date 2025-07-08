@@ -12,10 +12,13 @@ import { LoginUserData } from "@/types/response";
 import Link from "next/link";
 
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
+
+import { ROUTES } from "@/constants/routes";
 
 export default function CreateUserLoginForm() {
   const { startLoading, stopLoading } = useLoading();
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
 
   /* Request State */
   const [email, setEmail] = useState<string | null>(null);
@@ -35,6 +38,8 @@ export default function CreateUserLoginForm() {
 
   /* Password Visibility State */
   const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -94,7 +99,7 @@ export default function CreateUserLoginForm() {
           {
             label: "닫기",
             onClick: () => {
-              closeModal();
+              router.push(ROUTES.SHORT_URL);
             },
           },
         ],
@@ -178,19 +183,19 @@ export default function CreateUserLoginForm() {
       {/* 버튼 */}
       <div className="flex flex-row gap-2">
         <Link
-          href="/user/create"
+          href={ROUTES.USER.CREATE}
           className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center flex items-center justify-center"
         >
           회원 가입
         </Link>
         <Link
-          href="/user/update"
+          href={ROUTES.USER.UPDATE}
           className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center flex items-center justify-center"
         >
           회원 수정
         </Link>
         <Link
-          href="/user/delete"
+          href={ROUTES.USER.DELETE}
           className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200 text-center flex items-center justify-center"
         >
           회원 탈퇴

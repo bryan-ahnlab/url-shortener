@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ROUTES } from "@/constants/routes";
+
 export default function NotFound() {
   return (
     <div className="relative flex flex-col h-screen justify-center items-center text-center bg-black text-white overflow-hidden">
@@ -52,7 +54,7 @@ export default function NotFound() {
         {/* 버튼 */}
         <div className="w-full flex flex-row gap-4 justify-center">
           <Link
-            href="/"
+            href={ROUTES.ROOT}
             className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200"
           >
             Go Back

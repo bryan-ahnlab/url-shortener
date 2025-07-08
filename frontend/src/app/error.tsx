@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import Link from "next/link";
 
+import { ROUTES } from "@/constants/routes";
+
 export default function Error({
   error,
   reset,
@@ -72,7 +74,7 @@ export default function Error({
             Try Again
           </button>
           <Link
-            href="/"
+            href={ROUTES.ROOT}
             className="w-full bg-white border border-black/20 rounded px-3 py-2 text-black text-sm font-bold focus:ring-2 focus:ring-black focus:border-black/10 shadow-md cursor-pointer hover:bg-gray-200"
           >
             Go Back
