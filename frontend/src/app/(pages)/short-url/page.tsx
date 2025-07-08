@@ -1,4 +1,4 @@
-import CreateShortUrlForm from "@/components/CreateShortUrlForm";
+import CreateShortUrlForm from "@/app/(pages)/short-url/components/CreateShortUrlForm";
 
 export default function ShortUrlPage() {
   return (

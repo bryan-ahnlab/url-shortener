@@ -1,4 +1,4 @@
-import CreateUserLoginForm from "@/components/CreateUserLoginForm";
+import CreateUserLoginForm from "@/app/(pages)/user/login/components/CreateUserLoginForm";
 
 export default function ShortenPage() {
   return (

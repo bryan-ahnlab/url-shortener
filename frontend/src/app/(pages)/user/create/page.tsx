@@ -1,4 +1,4 @@
-import CreateUserForm from "@/components/CreateUserForm";
+import CreateUserForm from "@/app/(pages)/user/create/components/CreateUserForm";
 
 export default function ShortenPage() {
   return (

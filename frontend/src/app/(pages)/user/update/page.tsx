@@ -1,4 +1,4 @@
-import UpdateUserForm from "@/components/UpdateUserForm";
+import UpdateUserForm from "@/app/(pages)/user/update/components/UpdateUserForm";
 
 export default function ShortenPage() {
   return (

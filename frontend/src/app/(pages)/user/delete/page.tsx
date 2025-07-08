@@ -1,4 +1,4 @@
-import DeleteUserForm from "@/components/DeleteUserForm";
+import DeleteUserForm from "@/app/(pages)/user/delete/components/DeleteUserForm";
 
 export default function ShortenPage() {
   return (
