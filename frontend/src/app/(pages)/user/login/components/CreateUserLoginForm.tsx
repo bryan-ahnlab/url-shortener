@@ -15,6 +15,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
 import { ROUTES } from "@/constants/routes";
+import { useUser } from "@/contexts/UserContext";
 
 export default function CreateUserLoginForm() {
   const { startLoading, stopLoading } = useLoading();
@@ -40,6 +41,8 @@ export default function CreateUserLoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
+
+  const { setUser } = useUser();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -82,6 +85,7 @@ export default function CreateUserLoginForm() {
     console.log(apiResponse);
 
     if (apiResponse.ok) {
+      setUser(apiResponse.data.response);
       openModal({
         title: "로그인 성공",
         contents: [

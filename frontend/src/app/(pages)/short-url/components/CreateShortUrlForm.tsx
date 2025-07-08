@@ -8,6 +8,8 @@ import { ShortenUrlData } from "@/types/response";
 
 import { normalizeUrl } from "@/utils/utility";
 
+import { useUser } from "@/contexts/UserContext";
+
 export default function CreateShortUrlForm() {
   /* Request State */
   const [longUrl, setLongUrl] = useState<string | null>(null);
@@ -23,6 +25,8 @@ export default function CreateShortUrlForm() {
 
   /* Response Error State */
   const [error, setError] = useState<ApiErrorShape | null>(null);
+
+  const { user } = useUser();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,7 +50,7 @@ export default function CreateShortUrlForm() {
     }
 
     const formData = new FormData();
-    formData.append("user_id", "None");
+    formData.append("user_id", user?.id || "None");
     formData.append("long_url", longUrl);
     formData.append("description", description || "");
 

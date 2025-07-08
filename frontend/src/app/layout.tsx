@@ -6,6 +6,8 @@ import { ModalProvider } from "@/contexts/ModalContext";
 import Loading from "@/components/Loading";
 import Modal from "@/components/Modal";
 
+import { UserProvider } from "@/contexts/UserContext";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,13 +33,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="antialiased">
-        <LoadingProvider>
-          <ModalProvider>
-            {children}
-            <Modal />
-            <Loading />
-          </ModalProvider>
-        </LoadingProvider>
+        <UserProvider>
+          <LoadingProvider>
+            <ModalProvider>
+              {children}
+              <Modal />
+              <Loading />
+            </ModalProvider>
+          </LoadingProvider>
+        </UserProvider>
       </body>
     </html>
   );
