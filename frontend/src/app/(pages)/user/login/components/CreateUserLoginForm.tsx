@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useAppDispatch } from "@/store/hooks";
-import { startLoading, stopLoading } from "@/store/loadingSlice";
-import { openModal } from "@/store/modalSlice";
+
+import { useLoading } from "@/contexts/LoadingContext";
+import { useModal } from "@/contexts/ModalContext";
 
 import { createUserLogin } from "@/actions/user";
 import { ApiErrorShape } from "@/types/error";
@@ -14,7 +14,8 @@ import Link from "next/link";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 export default function CreateUserLoginForm() {
-  const dispatch = useAppDispatch();
+  const { startLoading, stopLoading } = useLoading();
+  const { openModal, closeModal } = useModal();
 
   /* Request State */
   const [email, setEmail] = useState<string | null>(null);
@@ -63,7 +64,7 @@ export default function CreateUserLoginForm() {
     } catch (err) {
       console.log("위치 정보를 가져올 수 없습니다.", err);
     }
-    dispatch(startLoading());
+    startLoading();
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
@@ -71,23 +72,33 @@ export default function CreateUserLoginForm() {
     formData.append("location", location);
 
     const apiResponse = await createUserLogin(formData);
-    dispatch(stopLoading());
+    stopLoading();
 
     console.log(apiResponse);
 
     if (apiResponse.ok) {
-      dispatch(
-        openModal({
-          title: "로그인 성공",
-          contents: [
-            "ID: " + apiResponse.data.response.id,
-            "Email: " + apiResponse.data.response.email,
-            "Password: " + apiResponse.data.response.password,
-            "Name: " + apiResponse.data.response.name,
-            "Phone: " + apiResponse.data.response.phone,
-          ],
-        })
-      );
+      openModal({
+        title: "로그인 성공",
+        contents: [
+          "ID: " + apiResponse.data.response.id,
+          "Email: " + apiResponse.data.response.email,
+          "Password: " + apiResponse.data.response.password,
+          "Name: " + apiResponse.data.response.name,
+          "Phone: " + apiResponse.data.response.phone,
+          "Address: " + apiResponse.data.response.address,
+          "Birth: " + apiResponse.data.response.birth,
+          "Created At: " + apiResponse.data.response.created_at,
+          "Updated At: " + apiResponse.data.response.updated_at,
+        ],
+        functions: [
+          {
+            label: "닫기",
+            onClick: () => {
+              closeModal();
+            },
+          },
+        ],
+      });
       setData(apiResponse.data);
       setError(null);
     } else {
