@@ -70,7 +70,7 @@ export default function CreateShortUrlForm() {
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 p-6 border border-white/10 rounded-xl shadow-xl backdrop-blur-lg bg-white/5 w-full min-w-[360px]"
     >
-      <h2 className="text-lg font-semibold text-white">Enter URL</h2>
+      <h2 className="text-lg font-semibold text-white">URL Shortener</h2>
 
       {/* Long URL 입력 */}
       <div className="flex flex-col gap-2.5 w-full">
